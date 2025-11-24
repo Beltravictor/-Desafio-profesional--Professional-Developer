@@ -9,7 +9,7 @@ El backend está desarrollado en **Java + Spring Boot**
 Spring crea las tablas automáticamente y ejecuta data.sql creando contenido ejemplo para el repositorio.
 Es necesario el plugin de Lombok para la creación de Getters, Setters y Constructores.
 
-## 🎨 Frontend
+## 🏗 Frontend
 El frontend está desarrollado en **React**.
 Dentro del proyecto se encuentran diferentes atajos para facilitar el testeo de componentes.
 
@@ -22,3 +22,12 @@ BACKEND_URL=http://localhost:8081
 
 ## 👮 PostMan Collection Para facilitar el testeo de APIs
 https://www.postman.com/beltravictor/proyecto-final-professional-developer/collection/abuohwp/proyecto-final?action=share&source=copy-link&creator=45461434
+
+---
+
+## 🎨 Paleta de color usada para el proyecto:
+![](https://img.shields.io/badge/%23021E73-021E73)
+![](https://img.shields.io/badge/%23023E73-023E73)
+![](https://img.shields.io/badge/%2303588C-03588C)
+![](https://img.shields.io/badge/%23609BBF-609BBF)
+![](https://img.shields.io/badge/%23D8EBF2-D8EBF2)
