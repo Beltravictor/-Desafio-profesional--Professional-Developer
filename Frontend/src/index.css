@@ -1,0 +1,36 @@
+/* Color Theme Swatches in Hex */
+.Airplane-flying-above-clouds-1-hex {
+    color: #021E73;
+}
+
+.Airplane-flying-above-clouds-2-hex {
+    color: #023E73;
+}
+
+.Airplane-flying-above-clouds-3-hex {
+    color: #03588C;
+}
+
+.Airplane-flying-above-clouds-4-hex {
+    color: #609BBF;
+}
+
+.Airplane-flying-above-clouds-5-hex {
+    color: #D8EBF2;
+}
+
+* {
+    font-family: "Red Hat Display", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.myLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.myLink.active {
+  text-decoration: none;
+  color: inherit;
+}

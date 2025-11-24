@@ -1,0 +1,83 @@
+.adm-pagcontenedor {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.adm-paggrid {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(5, auto);
+    gap: 15px 200px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+}
+
+.adm-pagitem {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.adm-1);
+}
+
+.adm-pagcontroles {
+    display: flex;
+    gap: 150px;
+    align-items: center;
+    font-size: 1.adm-2rem;
+}
+
+.adm-pagbutton {
+    padding: 16px 28px;
+    font-size: 1.adm-2rem;
+    min-width: 140px;
+}
+
+
+button {
+    padding: 8px 14px;
+    border: none;
+    background-color: #3a86ff;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:disabled {
+    background-color: #9bbcf5;
+    cursor: not-allowed;
+}
+
+.adm-tabla-admin {
+    width: 80%;
+    border-collapse: collapse;
+    background-color: #609BBF;
+}
+
+.adm-tabla-admin th,
+.adm-tabla-admin td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    text-align: center;
+}
+
+.adm-tabla-admin th {
+    background: #f4f4f4;
+    font-size: 20px;
+}
+
+.adm-tabla-admin td {
+    font-size: 15px;
+}
+
+.adm-tabla-admin button {
+    margin-right: 8px;
+}

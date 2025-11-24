@@ -1,0 +1,148 @@
+.form-contenedor {
+    width: 90%;
+    padding: 30px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-areas:
+        "header categoria"
+        "header categoria"
+        "header categoria"
+    ;
+    gap: 25px;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-item label {
+    font-size: 25px;
+    color: #D8EBF2;
+    margin-bottom: 6px;
+}
+
+.form-contenedor input,
+select,
+textarea {
+    width: 95%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    background: #d3d3d3;
+    border-radius: 6px;
+    font-size: 20px;
+    outline: none;
+}
+
+textarea {
+    height: 150px;
+    resize: none;
+}
+
+.form-descripcion {
+    grid-column: span 2;
+}
+
+.form-subtitulo {
+    margin-top: 25px;
+    font-size: 25px;
+    font-weight: bold;
+    color: #223;
+}
+
+.form-atributos-box {
+    margin-top: 10px;
+    width: 100%;
+    height: 150px;
+    background: #f3f3f3;
+    border-radius: 8px;
+}
+
+.form-cat {
+    grid-area: categoria;
+}
+
+.form-cat p {
+    width: 91.5%;
+    margin-top: -1px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    background: #d3d3d3;
+    border-radius: 6px;
+    font-size: 20px;
+    outline: none;
+}
+
+.cat-linea {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 91.5%;
+}
+
+.btn-eliminar {
+    background: #d9534f;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.btn-eliminar:hover {
+    background: #c9302c;
+}
+
+.form-btn {
+    font-size: 30px;
+    padding: 12px 24px;
+    background: #1e88e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.form-btn:hover {
+    background: #12548e;
+}
+
+.form-contbtn {
+    display: flex;
+    flex-direction: row;
+    margin-top: 50px;
+    align-items: center;
+    justify-content: center;
+    gap: 500px;
+}
+
+.form-info p {
+    width: 91.5%;
+    margin-top: -1px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    background: #d3d3d3;
+    border-radius: 6px;
+    font-size: 20px;
+    outline: none;
+}
+
+.form-img {
+    width: 500px;
+    height: 500px;
+}
+
+.form-img img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

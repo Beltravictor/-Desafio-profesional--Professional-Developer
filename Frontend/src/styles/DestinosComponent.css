@@ -1,0 +1,53 @@
+.contenedor-destinos {
+    display: flex;
+    flex-direction: column;
+}
+
+.botones-vertical {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 10px 0 30px;
+}
+
+.botones-editar{
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 30px 0 0;
+}
+
+.editar-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.editar-container {
+    background: white;
+    padding: 20px;
+    width: 350px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.form-title {
+    text-align: center;
+}
+
+.campo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.editar-form input {
+    justify-content: flex-end;
+}

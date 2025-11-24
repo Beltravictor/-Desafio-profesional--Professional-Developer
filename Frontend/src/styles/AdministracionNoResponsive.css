@@ -1,0 +1,28 @@
+.no-responsive {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.no-responsive-msg {
+    position: fixed;
+    top: 40%;
+    left: 20%;
+    background: rgb(196, 196, 196);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .no-responsive {
+        display: flex;
+    }
+}
