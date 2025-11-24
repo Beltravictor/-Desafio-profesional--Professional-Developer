@@ -20,6 +20,11 @@ BACKEND_URL=http://localhost:8081
 
 ---
 
+## 📊 Diagrama Base de Datos
+https://drive.google.com/file/d/1m9_G7IaYHtwnMjaqAQNYkz02r3E3SE9C/view?usp=drive_link
+
+---
+
 ## 👮 PostMan Collection Para facilitar el testeo de APIs
 https://www.postman.com/beltravictor/proyecto-final-professional-developer/collection/abuohwp/proyecto-final?action=share&source=copy-link&creator=45461434
 
