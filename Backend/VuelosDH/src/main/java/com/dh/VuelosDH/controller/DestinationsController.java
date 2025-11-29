@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequestMapping("/destinos")
 public class DestinationsController {
 
-    private IDestinationsService iDestinationsService;
+    private final IDestinationsService iDestinationsService;
 
     @Autowired
     public DestinationsController(IDestinationsService iDestinationsService) {

@@ -21,7 +21,7 @@ export const OrdenarComponent = ({ categorias }) => {
                     {mostrarMenu && (
                         <div className="ordenar-menu">
                             {categorias.map(c => (
-                                <NavLink className="myLink" key={categorias.id} to={`/destinos/categoria/${c.id}`}>
+                                <NavLink className="myLink" key={c.id} to={`/destinos/categoria/${c.id}`}>
                                     <button
                                         key={c.id}
                                         className="ordenar-menu-item"

@@ -1,7 +1,6 @@
 package com.dh.VuelosDH.controller;
 
 import com.dh.VuelosDH.dto.CategoryDTO;
-import com.dh.VuelosDH.dto.DestinationsDTO;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.Optional;
 @RequestMapping("/categorias")
 public class CategoryController {
 
-    private ICategoryService iCategoryService;
+    private final ICategoryService iCategoryService;
 
     @Autowired
     public CategoryController(ICategoryService iCategoryService) {

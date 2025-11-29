@@ -32,7 +32,6 @@ export const VuelosApp = () => {
           <Route path="/destinos/:filtro" element={<DestinosPage />} />
           <Route path="/destinos/:filtro/:id" element={<DestinosPage />} />
           <Route path="/destinoinfo/:id" element={<DestinoDetallePage />} />
-          <Route path="/destinoinfo/imagenes/:id" element={<DestinoImagenesPage />} />
           <Route path="/administracion" element={<AdministracionPage />} />
           <Route path="/administracion/destinos" element={<AdministracionDestinosPage />} />
           <Route path="/administracion/destinos/:filtro" element={<AdministracionDestinosPage />} />

@@ -19,7 +19,7 @@ public interface IDestinationsRepository extends JpaRepository<Destinations, Lon
 
     @Query(
             value = """
-                    SELECT DISTINCT D.DESTINATIONS_ID, D.NAME, D.SAMPLE_PRICE, D.DESCRIPTION
+                    SELECT DISTINCT D.DESTINATIONS_ID, D.NAME, D.SAMPLE_PRICE, D.DESCRIPTION, D.RATING
                     FROM DESTINATIONS D
                     JOIN DESTINATIONS_CATEGORY D_C
                     ON D.DESTINATIONS_ID = D_C .DESTINATIONS_ID

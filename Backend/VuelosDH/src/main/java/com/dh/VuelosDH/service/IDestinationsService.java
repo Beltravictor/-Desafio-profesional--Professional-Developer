@@ -1,7 +1,6 @@
 package com.dh.VuelosDH.service;
 
 import com.dh.VuelosDH.dto.DestinationsDTO;
-import com.dh.VuelosDH.entities.Destinations;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 
 import java.util.List;

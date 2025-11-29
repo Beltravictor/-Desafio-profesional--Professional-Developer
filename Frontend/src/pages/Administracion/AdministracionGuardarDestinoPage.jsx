@@ -21,6 +21,7 @@ export const AdministracionGuardarDestinoPage = () => {
 
     const [confirmacion, setConfirmacion] = useState(false)
     const [mensajeError, setMensajeError] = useState(false)
+    const [mensajeErrorDescripcion, setMensajeErrorDescripcion] = useState('')
 
     const agregarCategoria = (e) => {
         if (e.target.value)
@@ -28,14 +29,25 @@ export const AdministracionGuardarDestinoPage = () => {
     }
 
     useEffect(() => {
-        if (destinoPorNombre != undefined) {
+        if (nombre != '') {
             if (Object.keys(destinoPorNombre).length === 0) {
                 guardarDestino()
             } else {
+                setMensajeErrorDescripcion('Error: Ya existe un Denstino con ese nombre')
                 setMensajeError(true)
             }
         }
     }, [destinoPorNombre])
+
+
+    const verificarCampos = () => {
+        if (nombre && precio && imagenes && categoria.length && rating && descripcion) {
+            buscarDestinoPorNombre(nombre)
+        } else {
+            setMensajeErrorDescripcion('Error: Complete todos los campos')
+            setMensajeError(true)
+        }
+    }
 
 
     const guardarDestino = () => {
@@ -83,7 +95,7 @@ export const AdministracionGuardarDestinoPage = () => {
                     mensajeError &&
                     <div className="editar-form">
                         <div className="editar-container">
-                            <h2 className="form-title">Error: Ya existe un Denstino con ese nombre</h2>
+                            <h2 className="form-title">{mensajeErrorDescripcion}</h2>
                             <div className="botones-editar">
                                 <button className="form-btn" type="button" onClick={() => setMensajeError(false)}>Ok</button>
                             </div>
@@ -147,7 +159,7 @@ export const AdministracionGuardarDestinoPage = () => {
 
                 </div>
                 <div className="form-contbtn">
-                    <button className="form-btn" onClick={() => buscarDestinoPorNombre(nombre)}>Crear Destino</button>
+                    <button className="form-btn" onClick={() => verificarCampos()}>Crear Destino</button>
                     <NavLink className="myLink" to={`/administracion/destinos`}>
                         <button className="form-btn">Cancelar</button>
                     </NavLink>

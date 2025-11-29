@@ -1,12 +1,9 @@
 package com.dh.VuelosDH.service.impl;
 
 import com.dh.VuelosDH.dto.CategoryDTO;
-import com.dh.VuelosDH.dto.DestinationsDTO;
 import com.dh.VuelosDH.entities.Category;
-import com.dh.VuelosDH.entities.Destinations_Category;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.repository.ICategoryRepository;
-import com.dh.VuelosDH.repository.IDestinations_CategoryRepository;
 import com.dh.VuelosDH.service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +15,7 @@ import java.util.Optional;
 @Service
 public class ICategoryServiceImpl implements ICategoryService {
 
-    private ICategoryRepository iCategoryRepository;
+    private final ICategoryRepository iCategoryRepository;
 
     @Autowired
     public ICategoryServiceImpl(ICategoryRepository iCategoryRepository) {

@@ -1,7 +1,6 @@
 package com.dh.VuelosDH.controller;
 
 import com.dh.VuelosDH.dto.ImagesDTO;
-import com.dh.VuelosDH.entities.Images;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.service.IImagesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,7 @@ import java.util.Optional;
 @RequestMapping("/imagenes")
 public class ImagesController {
 
-    private IImagesService iImagesService;
+    private final IImagesService iImagesService;
 
     @Autowired
     public ImagesController(IImagesService iImagesService) {

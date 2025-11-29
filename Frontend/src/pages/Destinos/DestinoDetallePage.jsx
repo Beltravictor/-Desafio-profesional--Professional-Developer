@@ -1,8 +1,9 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { DestinosContext } from '../../context/Destinos/DestinosContext'
 import { CategoriasContext } from '../../context/Categorias/CategoriasContext'
-import { NavLink, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { HeaderComponent } from '../../components/HeaderComponent'
+import { DestinoImagenesComponent } from '../../components/DestinoImagenesComponent'
 
 export const DestinoDetallePage = () => {
   const { id } = useParams()
@@ -56,13 +57,11 @@ export const DestinoDetallePage = () => {
             </div>
           </div>
 
-          <div className='form-img'>
-            <NavLink className="myLink" to={`/destinoinfo/imagenes/${destinoPorID.id}`}>
-              <img src={destinoPorID.images[0]} alt={destinoPorID.name} />
-            </NavLink>
-          </div>
-
         </div>
+        <div className="form-info form-item">
+            <label>Fotos: </label>
+          </div>
+        <DestinoImagenesComponent destino={destinoPorID} />
       </div>
     </>
 

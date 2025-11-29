@@ -108,7 +108,7 @@ export const DestinosProvider = ({ children }) => {
 
     }
 
-    const [destinoPorNombre, setDestinoPorNombre] = useState()
+    const [destinoPorNombre, setDestinoPorNombre] = useState({})
 
     const buscarDestinoPorNombre = async (nombre) => {
         try {

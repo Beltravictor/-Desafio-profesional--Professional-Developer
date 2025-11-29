@@ -1,7 +1,14 @@
-.gallery-container {
+.gallery-container-ver-mas {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  position: relative;
+}
+
+.gallery-container-ver-menos {
+  width: 100%;
+  display: flex;
   gap: 10px;
   position: relative;
 }
@@ -28,7 +35,7 @@
 }
 
 .ver-mas-btn {
-  position: fixed;
+  position: absolute;
   bottom: 20px;
   right: 20px;
   border: none;
@@ -45,8 +52,8 @@
   background-color: rgba(0, 0, 0, 0.85);
 }
 
-@media (max-width: 768px) {
-  .gallery-container {
+@media (max-width: 900px) {
+  .gallery-container-ver-mas {
     grid-template-columns: 1fr;
   }
 

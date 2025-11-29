@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 public class IDestinations_CategoryServiceImpl implements IDestinations_CategoryService {
-    private IDestinations_CategoryRepository destinations_categoryRepository;
+    private final IDestinations_CategoryRepository destinations_categoryRepository;
 
     @Autowired
     public IDestinations_CategoryServiceImpl(IDestinations_CategoryRepository destinations_categoryRepository) {

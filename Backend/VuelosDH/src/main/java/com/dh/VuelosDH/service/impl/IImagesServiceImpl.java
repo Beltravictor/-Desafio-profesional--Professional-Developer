@@ -7,6 +7,7 @@ import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.repository.IDestinationsRepository;
 import com.dh.VuelosDH.repository.IImagesRepository;
 import com.dh.VuelosDH.service.IImagesService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class IImagesServiceImpl implements IImagesService {
 
-    private IImagesRepository iImagesrepository;
-    private IDestinationsRepository iDestinationsRepository;
+    private final IImagesRepository iImagesrepository;
+    private final IDestinationsRepository iDestinationsRepository;
 
-    @Autowired
-    public IImagesServiceImpl(IImagesRepository iImagesrepository, IDestinationsRepository iDestinationsRepository) {
-        this.iImagesrepository = iImagesrepository;
-        this.iDestinationsRepository = iDestinationsRepository;
-    }
 
     @Override
     public ImagesDTO save(ImagesDTO imagesDTO) {

@@ -22,6 +22,8 @@ export const AdministracionEditarDestinoPage = () => {
   const [descripcion, setDescripcion] = useState('')
 
   const [confirmacion, setConfirmacion] = useState(false)
+  const [mensajeError, setMensajeError] = useState(false)
+  const [mensajeErrorDescripcion, setMensajeErrorDescripcion] = useState('')
 
   useEffect(() => {
     buscarDestinoPorId(id)
@@ -42,6 +44,15 @@ export const AdministracionEditarDestinoPage = () => {
   const agregarCategoria = (e) => {
     if (e.target.value)
       setCategoria([...categoria, Number(e.target.value)])
+  }
+
+  const verificarCampos = () => {
+    if (nombre && precio && imagenes && categoria.length && rating && descripcion) {
+      editarDestino()
+    } else {
+      setMensajeErrorDescripcion('Error: Complete todos los campos')
+      setMensajeError(true)
+    }
   }
 
   const editarDestino = () => {
@@ -79,6 +90,18 @@ export const AdministracionEditarDestinoPage = () => {
               <h2 className="form-title">Destino Editado Con Éxito</h2>
               <div className="botones-editar">
                 <button type="button" onClick={() => setConfirmacion(false)}>Guardar</button>
+              </div>
+            </div>
+          </div>
+        }
+
+        {
+          mensajeError &&
+          <div className="editar-form">
+            <div className="editar-container">
+              <h2 className="form-title">{mensajeErrorDescripcion}</h2>
+              <div className="botones-editar">
+                <button className="form-btn" type="button" onClick={() => setMensajeError(false)}>Ok</button>
               </div>
             </div>
           </div>
@@ -140,7 +163,7 @@ export const AdministracionEditarDestinoPage = () => {
 
         </div>
         <div className="form-contbtn">
-          <button className="form-btn" onClick={() => editarDestino()}>Editar Destino</button>
+          <button className="form-btn" onClick={() => verificarCampos()}>Editar Destino</button>
           <NavLink className="myLink" to={`/administracion/destinos`}>
             <button className="form-btn">Cancelar</button>
           </NavLink>

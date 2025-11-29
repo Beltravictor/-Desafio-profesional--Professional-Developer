@@ -1,7 +1,6 @@
 package com.dh.VuelosDH.service;
 
 import com.dh.VuelosDH.dto.CategoryDTO;
-import com.dh.VuelosDH.entities.Category;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 
 import java.util.List;

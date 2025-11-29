@@ -8,6 +8,8 @@ import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.repository.ICategoryRepository;
 import com.dh.VuelosDH.repository.IDestinationsRepository;
 import com.dh.VuelosDH.service.IDestinationsService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class IDestinationsServiceImpl implements IDestinationsService {
 
-    private IDestinationsRepository destinationsRepository;
-    private ICategoryRepository iCategoryRepository;
-
-    @Autowired
-    public IDestinationsServiceImpl(IDestinationsRepository destinationsRepository, ICategoryRepository iCategoryRepository) {
-        this.destinationsRepository = destinationsRepository;
-        this.iCategoryRepository = iCategoryRepository;
-    }
+    private final IDestinationsRepository destinationsRepository;
+    private final ICategoryRepository iCategoryRepository;
 
     @Override
     public DestinationsDTO save(DestinationsDTO destinationsDTO) {
