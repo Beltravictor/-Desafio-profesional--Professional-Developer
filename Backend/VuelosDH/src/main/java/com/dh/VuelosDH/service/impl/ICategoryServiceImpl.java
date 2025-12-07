@@ -5,7 +5,8 @@ import com.dh.VuelosDH.entities.Category;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.repository.ICategoryRepository;
 import com.dh.VuelosDH.service.ICategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,14 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ICategoryServiceImpl implements ICategoryService {
 
     private final ICategoryRepository iCategoryRepository;
-
-    @Autowired
-    public ICategoryServiceImpl(ICategoryRepository iCategoryRepository) {
-        this.iCategoryRepository = iCategoryRepository;
-    }
 
     @Override
     public CategoryDTO save(CategoryDTO categoryDTO) {
@@ -38,7 +35,7 @@ public class ICategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public Optional<CategoryDTO> findById(Long id) throws ResourceNotFoundException {
+    public ResponseEntity<CategoryDTO> findById(Long id) throws ResourceNotFoundException {
         Optional<Category> category = iCategoryRepository.findById(id);
         if (category.isPresent()) {
             Category cat = category.get();
@@ -46,20 +43,26 @@ public class ICategoryServiceImpl implements ICategoryService {
             aux.setId(cat.getId());
             aux.setName(cat.getName());
             aux.setUrl(cat.getUrl());
-            return Optional.of(aux);
+            return ResponseEntity.ok(aux);
         } else
-            throw new ResourceNotFoundException("No se puedo eliminar la Imagen con id: " + id);
+            throw new ResourceNotFoundException("No se puedo eliminar la Categoría con id: " + id);
     }
 
     @Override
-    public void update(CategoryDTO categoryDTO) {
-        Category category = new Category();
+    public ResponseEntity<String> update(CategoryDTO categoryDTO) {
+        Optional<Category> categoryToLookFor = iCategoryRepository.findById(categoryDTO.getId());
+        if (categoryToLookFor.isPresent()) {
+            Category category = new Category();
 
-        category.setId(categoryDTO.getId());
-        category.setName(categoryDTO.getName());
-        category.setUrl(categoryDTO.getUrl());
+            category.setId(categoryDTO.getId());
+            category.setName(categoryDTO.getName());
+            category.setUrl(categoryDTO.getUrl());
 
-        iCategoryRepository.save(category);
+            iCategoryRepository.save(category);
+            return ResponseEntity.ok("Se actualizo la categoría con éxito");
+        } else
+            return ResponseEntity.ok("No se pudo actualizar la categoría");
+
     }
 
     @Override

@@ -3,23 +3,19 @@ package com.dh.VuelosDH.controller;
 import com.dh.VuelosDH.dto.DestinationsDTO;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.service.IDestinationsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/destinos")
+@RequiredArgsConstructor
 public class DestinationsController {
 
     private final IDestinationsService iDestinationsService;
-
-    @Autowired
-    public DestinationsController(IDestinationsService iDestinationsService) {
-        this.iDestinationsService = iDestinationsService;
-    }
 
     @PostMapping
     public ResponseEntity<DestinationsDTO> save(@RequestBody DestinationsDTO destinationsDTO) {
@@ -33,31 +29,20 @@ public class DestinationsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DestinationsDTO> findById(@PathVariable Long id) throws ResourceNotFoundException {
-        Optional<DestinationsDTO> destiantionDTO = iDestinationsService.findById(id);
-
-        if (destiantionDTO.isPresent())
-            return ResponseEntity.ok(destiantionDTO.get());
-        else
-            return ResponseEntity.notFound().build();
+        return iDestinationsService.findById(id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteById(@PathVariable Long id) throws ResourceNotFoundException {
         iDestinationsService.deleteById(id);
         return ResponseEntity.ok("Se elimino el Destino con éxito");
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> update(@RequestBody DestinationsDTO destinationsDTO) throws ResourceNotFoundException {
-        ResponseEntity<String> response;
-        Optional<DestinationsDTO> destinationsDTOToLookFor = iDestinationsService.findById(destinationsDTO.getId());
-        if (destinationsDTOToLookFor.isPresent()){
-            iDestinationsService.update(destinationsDTO);
-            response = ResponseEntity.ok("Se actualizo el Destino con éxito");
-        } else {
-            response = ResponseEntity.ok("No se pudo actualizar el Destino");
-        }
-        return response;
+        return iDestinationsService.update(destinationsDTO);
     }
 
     @GetMapping("/random/{nro}")
@@ -72,10 +57,6 @@ public class DestinationsController {
 
     @GetMapping("/nombre/{name}")
     public ResponseEntity<DestinationsDTO> findByName(@PathVariable String name) throws ResourceNotFoundException {
-        Optional<DestinationsDTO> destiantionDTO = iDestinationsService.findByName(name);
-        if (destiantionDTO.isPresent())
-            return ResponseEntity.ok(destiantionDTO.get());
-        else
-            return ResponseEntity.notFound().build();
+        return iDestinationsService.findByName(name);
     }
 }

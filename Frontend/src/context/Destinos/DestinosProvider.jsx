@@ -15,29 +15,31 @@ export const DestinosProvider = ({ children }) => {
         }
     }
 
-
-    const addDestinos = async (destino) => {
+    const addDestinos = async (destino, token) => {
         try {
             const res = await fetch("http://localhost:8081/destinos", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(destino)
             });
             fetchDestinos();
             const data = await res.json()
-            console.log("Respuesta:", data)
 
         } catch (error) {
             console.error("Error al enviar POST:", error)
         }
     }
 
-    const eliminarDestinos = async (id) => {
+    const eliminarDestinos = async (id, token) => {
         try {
             const res = await fetch(`http://localhost:8081/destinos/${id}`, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             if (!res.ok) {
@@ -50,15 +52,16 @@ export const DestinosProvider = ({ children }) => {
         }
     }
 
-    const editarDestinos = async (newDestino) => {
+    const editarDestinos = async (newDestino, token) => {
         try {
             const res = await fetch("http://localhost:8081/destinos", {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(newDestino)
-            });
+            })
             const data = await res.text();
             console.log("Respuesta:", data);
         } catch (error) {

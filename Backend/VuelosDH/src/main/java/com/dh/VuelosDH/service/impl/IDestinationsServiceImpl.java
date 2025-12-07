@@ -3,14 +3,17 @@ package com.dh.VuelosDH.service.impl;
 import com.dh.VuelosDH.dto.DestinationsDTO;
 import com.dh.VuelosDH.entities.Destinations;
 import com.dh.VuelosDH.entities.Destinations_Category;
+import com.dh.VuelosDH.entities.Destinations_Characteristics;
 import com.dh.VuelosDH.entities.Images;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.repository.ICategoryRepository;
+import com.dh.VuelosDH.repository.ICharacteristicsRepository;
 import com.dh.VuelosDH.repository.IDestinationsRepository;
 import com.dh.VuelosDH.service.IDestinationsService;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class IDestinationsServiceImpl implements IDestinationsService {
 
     private final IDestinationsRepository destinationsRepository;
     private final ICategoryRepository iCategoryRepository;
+    private final ICharacteristicsRepository iCharacteristicsRepository;
 
     @Override
     public DestinationsDTO save(DestinationsDTO destinationsDTO) {
@@ -49,6 +53,15 @@ public class IDestinationsServiceImpl implements IDestinationsService {
                 destinationsDTOToReturn.getCategories().add(id);
             }
         }
+        for (Long id : destinationsDTO.getCharacteristics()) {
+            Destinations_Characteristics d_cEntity = new Destinations_Characteristics();
+
+            if (iCharacteristicsRepository.findById(id).isPresent()) {
+                d_cEntity.setCharacteristics(iCharacteristicsRepository.findById(id).get());
+                d_cEntity.setDestination(destinationsEntity);
+                destinationsEntity.getCharacteristics().add(d_cEntity);
+            }
+        }
         destinationsRepository.save(destinationsEntity);
 
         destinationsDTOToReturn.setId(destinationsEntity.getId());
@@ -56,28 +69,43 @@ public class IDestinationsServiceImpl implements IDestinationsService {
         destinationsDTOToReturn.setDescription(destinationsDTO.getDescription());
         destinationsDTOToReturn.setSample_price(destinationsDTO.getSample_price());
         destinationsDTOToReturn.setImages(destinationsDTO.getImages());
+        destinationsDTOToReturn.setCategories(destinationsDTO.getCategories());
+        destinationsDTOToReturn.setCharacteristics(destinationsDTO.getCharacteristics());
 
         return destinationsDTOToReturn;
     }
 
     @Override
-    public Optional<DestinationsDTO> findById(Long id) throws ResourceNotFoundException {
+    public ResponseEntity<DestinationsDTO> findById(Long id) throws ResourceNotFoundException {
         Optional<Destinations> destinations = destinationsRepository.findById(id);
         if (destinations.isPresent()) {
             Destinations des = destinations.get();
-            DestinationsDTO aux = new DestinationsDTO();
-            aux.setId(des.getId());
-            aux.setName(des.getName());
-            aux.setDescription(des.getDescription());
-            aux.setSample_price(des.getSample_price());
-            aux.setRating(des.getRating());
-            for (Images img : des.getImages()) {
-                aux.getImages().add(img.getUrl());
-            }
-            for (Destinations_Category d_c : des.getCategories()) {
-                aux.getCategories().add(d_c.getCategory().getId());
-            }
-            return Optional.of(aux);
+            DestinationsDTO aux = DestinationsDTO.builder()
+                    .id(des.getId())
+                    .name(des.getName())
+                    .description(des.getDescription())
+                    .sample_price(des.getSample_price())
+                    .rating(des.getRating())
+                    .images(
+                            des.getImages()
+                                    .stream()
+                                    .map(Images::getUrl)
+                                    .toList()
+                    )
+                    .categories(
+                            des.getCategories()
+                                    .stream()
+                                    .map(d_c -> d_c.getCategory().getId())
+                                    .toList()
+                    )
+                    .characteristics(
+                            des.getCharacteristics()
+                                    .stream()
+                                    .map(d_c -> d_c.getCharacteristics().getId())
+                                    .toList()
+                    )
+                    .build();
+            return ResponseEntity.ok(aux);
         } else {
             throw new ResourceNotFoundException("No se encontró el Destino con id: " + id);
         }
@@ -85,30 +113,46 @@ public class IDestinationsServiceImpl implements IDestinationsService {
     }
 
     @Override
-    public void update(DestinationsDTO destinationsDTO) {
-        Destinations destinationsEntity = new Destinations();
-        destinationsEntity.setId(destinationsDTO.getId());
-        destinationsEntity.setName(destinationsDTO.getName());
-        destinationsEntity.setDescription(destinationsDTO.getDescription());
-        destinationsEntity.setSample_price(destinationsDTO.getSample_price());
-        destinationsEntity.setRating(destinationsDTO.getRating());
+    public ResponseEntity<String> update(DestinationsDTO destinationsDTO) {
 
-        for (String url : destinationsDTO.getImages()) {
-            Images imagesEntity = new Images();
-            imagesEntity.setUrl(url);
-            imagesEntity.setDestination(destinationsEntity);
-            destinationsEntity.getImages().add(imagesEntity);
-        }
-        for (Long id : destinationsDTO.getCategories()) {
-            Destinations_Category d_cEntity = new Destinations_Category();
+        Optional<Destinations> destinations = destinationsRepository.findById(destinationsDTO.getId());
+        if (destinations.isPresent()) {
+            Destinations destinationsEntity = new Destinations();
+            destinationsEntity.setId(destinationsDTO.getId());
+            destinationsEntity.setName(destinationsDTO.getName());
+            destinationsEntity.setDescription(destinationsDTO.getDescription());
+            destinationsEntity.setSample_price(destinationsDTO.getSample_price());
+            destinationsEntity.setRating(destinationsDTO.getRating());
 
-            if (iCategoryRepository.findById(id).isPresent()) {
-                d_cEntity.setCategory(iCategoryRepository.findById(id).get());
-                d_cEntity.setDestination(destinationsEntity);
-                destinationsEntity.getCategories().add(d_cEntity);
+            for (String url : destinationsDTO.getImages()) {
+                Images imagesEntity = new Images();
+                imagesEntity.setUrl(url);
+                imagesEntity.setDestination(destinationsEntity);
+                destinationsEntity.getImages().add(imagesEntity);
             }
+            for (Long id : destinationsDTO.getCategories()) {
+                Destinations_Category d_cEntity = new Destinations_Category();
+
+                if (iCategoryRepository.findById(id).isPresent()) {
+                    d_cEntity.setCategory(iCategoryRepository.findById(id).get());
+                    d_cEntity.setDestination(destinationsEntity);
+                    destinationsEntity.getCategories().add(d_cEntity);
+                }
+            }
+            for (Long id  : destinationsDTO.getCharacteristics()) {
+                Destinations_Characteristics d_cEntity = new Destinations_Characteristics();
+
+                if (iCharacteristicsRepository.findById(id).isPresent()) {
+                    d_cEntity.setCharacteristics(iCharacteristicsRepository.findById(id).get());
+                    d_cEntity.setDestination(destinationsEntity);
+                    destinationsEntity.getCharacteristics().add(d_cEntity);
+                }
+            }
+            destinationsRepository.save(destinationsEntity);
+            return ResponseEntity.ok("Se actualizo el Destino con éxito");
+        } else {
+            return ResponseEntity.ok("No se pudo actualizar el Destino");
         }
-        destinationsRepository.save(destinationsEntity);
     }
 
     @Override
@@ -125,19 +169,31 @@ public class IDestinationsServiceImpl implements IDestinationsService {
         List<Destinations> destinations = destinationsRepository.findAll();
         List<DestinationsDTO> destinationsDTO = new ArrayList<>();
         for (Destinations des : destinations) {
-            DestinationsDTO aux = new DestinationsDTO();
-            aux.setId(des.getId());
-            aux.setName(des.getName());
-            aux.setDescription(des.getDescription());
-            aux.setSample_price(des.getSample_price());
-            aux.setRating(des.getRating());
-            for (Images img : des.getImages()) {
-                aux.getImages().add(img.getUrl());
-            }
-            for (Destinations_Category d_c : des.getCategories()) {
-                aux.getCategories().add(d_c.getCategory().getId());
-            }
-            destinationsDTO.add(aux);
+            destinationsDTO.add(DestinationsDTO.builder()
+                    .id(des.getId())
+                    .name(des.getName())
+                    .description(des.getDescription())
+                    .sample_price(des.getSample_price())
+                    .rating(des.getRating())
+                    .images(
+                            des.getImages()
+                                    .stream()
+                                    .map(Images::getUrl)
+                                    .toList()
+                    )
+                    .categories(
+                            des.getCategories()
+                                    .stream()
+                                    .map(d_c -> d_c.getCategory().getId())
+                                    .toList()
+                    )
+                    .characteristics(
+                            des.getCharacteristics()
+                                    .stream()
+                                    .map(d_c -> d_c.getCharacteristics().getId())
+                                    .toList()
+                    )
+                    .build());
         }
         return destinationsDTO;
     }
@@ -147,19 +203,31 @@ public class IDestinationsServiceImpl implements IDestinationsService {
         List<Destinations> destinations = destinationsRepository.randomsDestinations(nro);
         List<DestinationsDTO> destinationsDTO = new ArrayList<>();
         for (Destinations des : destinations) {
-            DestinationsDTO aux = new DestinationsDTO();
-            aux.setId(des.getId());
-            aux.setName(des.getName());
-            aux.setDescription(des.getDescription());
-            aux.setSample_price(des.getSample_price());
-            aux.setRating(des.getRating());
-            for (Images img : des.getImages()) {
-                aux.getImages().add(img.getUrl());
-            }
-            for (Destinations_Category d_c : des.getCategories()) {
-                aux.getCategories().add(d_c.getCategory().getId());
-            }
-            destinationsDTO.add(aux);
+            destinationsDTO.add(DestinationsDTO.builder()
+                    .id(des.getId())
+                    .name(des.getName())
+                    .description(des.getDescription())
+                    .sample_price(des.getSample_price())
+                    .rating(des.getRating())
+                    .images(
+                            des.getImages()
+                                    .stream()
+                                    .map(Images::getUrl)
+                                    .toList()
+                    )
+                    .categories(
+                            des.getCategories()
+                                    .stream()
+                                    .map(d_c -> d_c.getCategory().getId())
+                                    .toList()
+                    )
+                    .characteristics(
+                            des.getCharacteristics()
+                                    .stream()
+                                    .map(d_c -> d_c.getCharacteristics().getId())
+                                    .toList()
+                    )
+                    .build());
         }
         return destinationsDTO;
     }
@@ -169,41 +237,66 @@ public class IDestinationsServiceImpl implements IDestinationsService {
         List<Destinations> destinations = destinationsRepository.findByCategory(id);
         List<DestinationsDTO> destinationsDTO = new ArrayList<>();
         for (Destinations des : destinations) {
-            DestinationsDTO aux = new DestinationsDTO();
-            aux.setId(des.getId());
-            aux.setName(des.getName());
-            aux.setDescription(des.getDescription());
-            aux.setSample_price(des.getSample_price());
-            aux.setRating(des.getRating());
-            for (Images img : des.getImages()) {
-                aux.getImages().add(img.getUrl());
-            }
-            for (Destinations_Category d_c : des.getCategories()) {
-                aux.getCategories().add(d_c.getCategory().getId());
-            }
-            destinationsDTO.add(aux);
+            destinationsDTO.add(DestinationsDTO.builder()
+                    .id(des.getId())
+                    .name(des.getName())
+                    .description(des.getDescription())
+                    .sample_price(des.getSample_price())
+                    .rating(des.getRating())
+                    .images(
+                            des.getImages()
+                                    .stream()
+                                    .map(Images::getUrl)
+                                    .toList()
+                    )
+                    .categories(
+                            des.getCategories()
+                                    .stream()
+                                    .map(d_c -> d_c.getCategory().getId())
+                                    .toList()
+                    )
+                    .characteristics(
+                            des.getCharacteristics()
+                                    .stream()
+                                    .map(d_c -> d_c.getCharacteristics().getId())
+                                    .toList()
+                    )
+                    .build());
         }
         return destinationsDTO;
     }
 
     @Override
-    public Optional<DestinationsDTO> findByName(String name) throws ResourceNotFoundException{
+    public ResponseEntity<DestinationsDTO> findByName(String name) throws ResourceNotFoundException {
         Optional<Destinations> destinations = destinationsRepository.findByName(name);
         if (destinations.isPresent()) {
             Destinations des = destinations.get();
-            DestinationsDTO aux = new DestinationsDTO();
-            aux.setId(des.getId());
-            aux.setName(des.getName());
-            aux.setDescription(des.getDescription());
-            aux.setSample_price(des.getSample_price());
-            aux.setRating(des.getRating());
-            for (Images img : des.getImages()) {
-                aux.getImages().add(img.getUrl());
-            }
-            for (Destinations_Category d_c : des.getCategories()) {
-                aux.getCategories().add(d_c.getCategory().getId());
-            }
-            return Optional.of(aux);
+            DestinationsDTO aux = DestinationsDTO.builder()
+                    .id(des.getId())
+                    .name(des.getName())
+                    .description(des.getDescription())
+                    .sample_price(des.getSample_price())
+                    .rating(des.getRating())
+                    .images(
+                            des.getImages()
+                                    .stream()
+                                    .map(Images::getUrl)
+                                    .toList()
+                    )
+                    .categories(
+                            des.getCategories()
+                                    .stream()
+                                    .map(d_c -> d_c.getCategory().getId())
+                                    .toList()
+                    )
+                    .characteristics(
+                            des.getCharacteristics()
+                                    .stream()
+                                    .map(d_c -> d_c.getCharacteristics().getId())
+                                    .toList()
+                    )
+                    .build();
+            return ResponseEntity.ok(aux);
         } else {
             throw new ResourceNotFoundException("No se encontró el Destino con nombre: " + name);
         }

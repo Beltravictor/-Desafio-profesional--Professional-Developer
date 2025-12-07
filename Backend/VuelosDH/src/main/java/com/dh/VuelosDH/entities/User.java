@@ -6,10 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "Users")
@@ -42,7 +39,10 @@ public class User implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "user")
-    private Set<Flight> flight =new HashSet<>();
+    private List<Flight> flight = new ArrayList<>();
+
+    @Column(name = "creationDate")
+    private Date creationDate;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

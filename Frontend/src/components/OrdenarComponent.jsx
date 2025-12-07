@@ -1,58 +1,94 @@
-import { useState } from "react";
-import "../styles/OrdenarComponent.css";
-import { NavLink } from "react-router-dom";
+import { useState } from "react"
+import "../styles/OrdenarComponent.css"
 
-export const OrdenarComponent = ({ categorias }) => {
-    const [mostrarMenu, setMostrarMenu] = useState(false);
+export const OrdenarComponent = ({ elements, elementsFilter, setElementsFilter, setOrden }) => {
+    const [mostrarMenu, setMostrarMenu] = useState(false)
+    const [mostrarOrden, setMostrarOrden] = useState(false)
 
     return (
         <div className="ordenar-contenedor">
-
-            <h3 className="ordenar-titulo">Ordenar por</h3>
 
             <div className="ordenar-botones">
 
                 <div className="ordenar-categoria-wrapper">
                     <button
                         className="ordenar-boton"
-                        onClick={() => setMostrarMenu(!mostrarMenu)}
-                    >Categoría ▾</button>
+                        onClick={() => {
+                            setMostrarMenu(!mostrarMenu)
+                        }}
+                    >Filtrar por Categoría ▾</button>
 
                     {mostrarMenu && (
                         <div className="ordenar-menu">
-                            {categorias.map(c => (
-                                <NavLink className="myLink" key={c.id} to={`/destinos/categoria/${c.id}`}>
+                            {elements.filter(el => !elementsFilter.includes(el.id))
+                                .map(c => (
                                     <button
                                         key={c.id}
                                         className="ordenar-menu-item"
                                         onClick={() => {
-                                            setMostrarMenu(false);
+                                            setMostrarMenu(false)
+                                            setMostrarOrden(false)
+                                            setElementsFilter([...elementsFilter, c.id])
                                         }}
                                     >{c.name}</button>
-                                </NavLink>
-
-                            ))}
+                                ))}
                         </div>
                     )}
                 </div>
 
-                <NavLink className="myLink" to={`/destinos/nombre`}>
-                    <button className="ordenar-boton">Nombre</button>
-                </NavLink>
+                <div className="ordenar-categoria-wrapper">
+                    <button
+                        className="ordenar-boton"
+                        onClick={() => {
+                            setMostrarOrden(!mostrarOrden)
+                        }}
+                    >Ordenar Por ▾</button>
 
-                <NavLink className="myLink" to={`/destinos/precio`}>
-                    <button className="ordenar-boton">Precio</button>
-                </NavLink>
+                    {mostrarOrden && (
+                        <div className="ordenar-menu">
+                            <button className="ordenar-menu-item"
+                                onClick={() => {
+                                    setMostrarMenu(false)
+                                    setMostrarOrden(false)
+                                    setOrden('nombre')
+                                }}
+                            >Nombre</button>
 
-                <NavLink className="myLink" to={`/destinos/rating`}>
-                    <button className="ordenar-boton">Rating</button>
-                </NavLink>
+                            <button className="ordenar-menu-item"
+                                onClick={() => {
+                                    setMostrarMenu(false)
+                                    setMostrarOrden(false)
+                                    setOrden('precio')
+                                }}
+                            >Precio</button>
 
-                <NavLink className="myLink" to={`/destinos`}>
-                    <button className="ordenar-boton">Todos los Destinos</button>
-                </NavLink>
+                            <button className="ordenar-menu-item"
+                                onClick={() => {
+                                    setMostrarMenu(false)
+                                    setMostrarOrden(false)
+                                    setOrden('rating')
+                                }}
+                            >Rating</button>
+                        </div>
+                    )}
+                </div>
 
             </div>
+            <div className="ordenar-filtros-activos">
+                {elementsFilter.map((cat) => (
+                    <div key={cat} className="filtro-item">
+                        <span>{elements.find(cate => cate.id === cat).name}</span>
+                        <button
+                            className="filtro-btn-eliminar"
+                            onClick={() =>
+                                setElementsFilter(elementsFilter.filter(cate => cate !== cat))
+                            }
+                        >
+                            X
+                        </button>
+                    </div>
+                ))}
+            </div>
         </div>
-    );
-};
+    )
+}

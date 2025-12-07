@@ -1,58 +1,18 @@
 import { useContext, useEffect, useState } from "react"
 import { DestinosContext } from "../../context/Destinos/DestinosContext"
-import { useParams } from "react-router-dom"
 import { CategoriasContext } from "../../context/Categorias/CategoriasContext"
 import { PaginadoComponent } from "../../components/PaginadoComponent"
 import { OrdenarComponent } from "../../components/OrdenarComponent"
 
 export const DestinosPage = () => {
 
-    const { filtro, id } = useParams()
     const { destinos, fetchDestinos } = useContext(DestinosContext)
     const { categorias, fetchCategorias } = useContext(CategoriasContext)
 
     const [filtrados, setFiltrados] = useState([])
+    const [categoriasFiltro, setCategoriasFiltro] = useState([])
+    const [orden, setOrden] = useState('')
     const [title, setTitle] = useState('')
-
-    const filtrar = () => {
-        switch (filtro) {
-            case 'categoria':
-                setFiltrados(
-                    destinos.filter(destino =>
-                        destino.categories.includes(Number(id))
-                    )
-                )
-                setTitle(`Resultados Por Categoría: ${categorias[id - 1]?.name}`)
-                break
-            case 'nombre':
-                setFiltrados(
-                    destinos.sort((a, b) =>
-                        a.name.localeCompare(b.name)
-                    ))
-                setTitle('Resultados Odernados Alafbeticamente')
-                break
-            case 'precio':
-                setFiltrados(
-                    destinos.sort((a, b) =>
-                        b.sample_price - a.sample_price
-                    ))
-                setTitle('Resultados Odernados Por Precio')
-                break
-            case 'rating':
-                setFiltrados(
-                    destinos.sort((a, b) =>
-                        b.rating - a.rating
-                    ))
-                setTitle('Resultados Odernados Por Rating')
-                break
-            default:
-                setFiltrados(destinos.sort((a, b) =>
-                    a.id - b.id
-                ))
-                setTitle(`Todos Nuestros Destinos`)
-                break
-        }
-    }
 
     useEffect(() => {
         fetchDestinos()
@@ -60,10 +20,46 @@ export const DestinosPage = () => {
     }, [])
 
     useEffect(() => {
-        if (destinos.length > 0) {
-            filtrar();
+        if (!destinos || destinos.length === 0) {
+            setFiltrados([])
+            return
         }
-    }, [destinos, filtro, id])
+
+        let resultado = [...destinos]
+
+        if (categoriasFiltro.length > 0) {
+            resultado = resultado.filter(des =>
+                categoriasFiltro.every(catFiltro =>
+                    des.categories.some(cat => cat === catFiltro)
+                )
+            )
+        }
+
+        switch (orden) {
+            case 'nombre':
+                resultado.sort((a, b) => a.name.localeCompare(b.name))
+                setTitle('Ordenados Por Nombre')
+                break
+
+            case 'precio':
+                resultado.sort((a, b) => b.sample_price - a.sample_price)
+                setTitle('Ordenados Por Precio')
+                break
+
+            case 'rating':
+                resultado.sort((a, b) => b.rating - a.rating)
+                setTitle('Ordenados Por Rating')
+                break
+
+            default:
+                setTitle('Todos Nuestros Destinos')
+                break
+        }
+
+        setFiltrados(resultado)
+
+    }, [destinos, categoriasFiltro, orden])
+
 
     if (!destinos || Object.keys(destinos).length === 0
         || !categorias || Object.keys(categorias).length === 0) {
@@ -72,9 +68,11 @@ export const DestinosPage = () => {
 
     return (
         <>
-            <h2 className="subtitle">{title}</h2>
+            <h2 className="destino-title">Destinos encontrdos: {filtrados.length}</h2>
+            <h2 className="destino-subtitle">{title}</h2>
             <OrdenarComponent
-                categorias={categorias}
+                elements={categorias} elementsFilter={categoriasFiltro} setElementsFilter={setCategoriasFiltro}
+                setOrden={setOrden}
             />
 
             {filtrados.length === 0 ? (

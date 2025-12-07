@@ -15,29 +15,31 @@ export const CategoriasProvider = ({ children }) => {
         }
     }
 
-    const addCategoria = async (categoria) => {
+    const addCategoria = async (categoria, token) => {
         try {
             const res = await fetch("http://localhost:8081/categorias", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(categoria)
-            });
+            })
             fetchCategorias()
             const data = await res.json()
-            console.log("Respuesta:", data)
-
         } catch (error) {
             console.error("Error al enviar POST:", error);
         }
     }
 
-    const eliminarCategoria = async (id) => {
+    const eliminarCategoria = async (id, token) => {
         try {
             const res = await fetch(`http://localhost:8081/categorias/${id}`, {
-                method: "DELETE"
-            });
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
 
             if (!res.ok) {
                 throw new Error("Error al eliminar")
@@ -49,17 +51,17 @@ export const CategoriasProvider = ({ children }) => {
         }
     }
 
-    const editarCategoria = async (newCategoria) => {
+    const editarCategoria = async (newCategoria, token) => {
         try {
             const res = await fetch("http://localhost:8081/categorias", {
                 method: "PUT",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(newCategoria)
-            });
+            })
             const data = await res.text()
-            console.log("Respuesta:", data)
         } catch (error) {
             console.error("Error al Actualizar:", error)
         }

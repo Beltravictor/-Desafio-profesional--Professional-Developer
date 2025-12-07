@@ -3,6 +3,7 @@ package com.dh.VuelosDH.controller;
 import com.dh.VuelosDH.dto.ImagesDTO;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.service.IImagesService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +24,7 @@ public class ImagesController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ImagesDTO> findById(@PathVariable Long id) throws ResourceNotFoundException {
-        Optional<ImagesDTO> image = iImagesService.findById(id);
-
-        if (image.isPresent())
-            return ResponseEntity.ok(image.get());
-        else
-            return ResponseEntity.notFound().build();
+        return iImagesService.findById(id);
     }
 
     @GetMapping
@@ -37,7 +33,7 @@ public class ImagesController {
     }
 
     @PostMapping
-    public ResponseEntity<ImagesDTO> save(@RequestBody ImagesDTO imagesDTO) {
+    public ResponseEntity<ImagesDTO> save(@RequestBody @Valid  ImagesDTO imagesDTO) {
         return ResponseEntity.ok(iImagesService.save(imagesDTO));
     }
 }

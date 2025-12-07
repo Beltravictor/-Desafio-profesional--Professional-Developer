@@ -9,6 +9,7 @@ import com.dh.VuelosDH.repository.IImagesRepository;
 import com.dh.VuelosDH.service.IImagesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class IImagesServiceImpl implements IImagesService {
     }
 
     @Override
-    public Optional<ImagesDTO> findById(Long id) throws ResourceNotFoundException {
+    public ResponseEntity<ImagesDTO> findById(Long id) throws ResourceNotFoundException {
         Optional<Images> images = iImagesrepository.findById(id);
         if (images.isPresent()) {
             ImagesDTO imagesDTO = new ImagesDTO();
@@ -50,7 +51,7 @@ public class IImagesServiceImpl implements IImagesService {
             if (img.getDestination() != null) {
                 imagesDTO.setDestination_id(img.getDestination().getId());
             }
-            return Optional.of(imagesDTO);
+            return ResponseEntity.ok(imagesDTO);
         } else
             throw new ResourceNotFoundException("No se encontro Imagen con id: " + id);
     }
@@ -67,7 +68,7 @@ public class IImagesServiceImpl implements IImagesService {
 
     @Override
     public void delete(Long id) throws ResourceNotFoundException {
-        Optional<ImagesDTO> destinationsToLookFor = findById(id);
+        Optional<Images> destinationsToLookFor = iImagesrepository.findById(id);
         if (destinationsToLookFor.isPresent())
             iImagesrepository.deleteById(id);
         else

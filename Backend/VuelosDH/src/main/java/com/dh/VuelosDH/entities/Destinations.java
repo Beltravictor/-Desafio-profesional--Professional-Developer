@@ -1,10 +1,7 @@
 package com.dh.VuelosDH.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,6 +14,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Destinations {
 
     @Id
@@ -31,7 +29,10 @@ public class Destinations {
     private List<Images> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Destinations_Category> categories = new HashSet<>();
+    private List<Destinations_Category> categories = new ArrayList<>();
+
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Destinations_Characteristics> characteristics = new ArrayList<>();
 
     @Column(name = "description")
     private String description;
@@ -58,6 +59,16 @@ public class Destinations {
             for (Destinations_Category d_c : categories) {
                 d_c.setDestination(this);
                 this.categories.add(d_c);
+            }
+        }
+    }
+
+    public void setCharacteristics(Set<Destinations_Characteristics> characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null) {
+            for (Destinations_Characteristics d_c : characteristics) {
+                d_c.setDestination(this);
+                this.characteristics.add(d_c);
             }
         }
     }

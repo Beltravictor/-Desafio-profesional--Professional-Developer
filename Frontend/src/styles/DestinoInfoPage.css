@@ -1,4 +1,5 @@
 .gallery-container-ver-mas {
+  margin-bottom: 40px;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -7,6 +8,7 @@
 }
 
 .gallery-container-ver-menos {
+  margin-bottom: 40px;
   width: 100%;
   display: flex;
   gap: 10px;

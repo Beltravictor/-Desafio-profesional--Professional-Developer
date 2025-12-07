@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Category")
@@ -26,7 +26,7 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<Destinations_Category> destinations = new HashSet<>();
+    private List<Destinations_Category> destinations = new ArrayList<>();
 
     @Column(name = "url")
     private String url;

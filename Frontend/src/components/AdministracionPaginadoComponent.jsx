@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import '../styles/AdministracionPaginadoComponent.css'
 import { NavLink } from 'react-router-dom';
 
-export const AdministracionPaginadoComponent = ({ elementos, eliminarElemento, rutaEditar }) => {
+export const AdministracionPaginadoComponent = ({ elementos, eliminarElemento, token, rutaEditar }) => {
 
     const [pagina, setPagina] = useState(0);
     const [confirmacionBorrar, setConfirmacionBorrar] = useState(false);
@@ -24,7 +24,7 @@ export const AdministracionPaginadoComponent = ({ elementos, eliminarElemento, r
     }, [elementoABorrar])
 
     const borrarElemento = () => {
-        eliminarElemento(elementoABorrar.id)
+        eliminarElemento(elementoABorrar.id, token)
         setElementoABorrar()
         setConfirmacionBorrar(false)
     }

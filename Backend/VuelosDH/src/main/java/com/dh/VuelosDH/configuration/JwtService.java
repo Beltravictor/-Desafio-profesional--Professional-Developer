@@ -1,5 +1,6 @@
 package com.dh.VuelosDH.configuration;
 
+import com.dh.VuelosDH.entities.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -11,7 +12,6 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Service
@@ -19,26 +19,28 @@ public class JwtService {
 
     private static final String SECRET_KEY = "c2b28fd6e2d8227dd036e63deceb0e7b7082d59ebc590093d95fa5c7aa6b372c";
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("firstname", user.getFirstname());
+        claims.put("lastname", user.getLastname());
+        claims.put("role", user.getRole().name());
+
+        return buildToken(claims, user);
+    }
+
+    private String buildToken(Map<String, Object> claims, UserDetails userDetails) {
+        return Jwts
+                .builder()
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getSigningKey())
+                .compact();
     }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
-    }
-
-    public String generateToken(
-            Map<String, Objects> extractClaims,
-            UserDetails userDetails
-    ) {
-        return Jwts
-                .builder()
-                .claims(extractClaims)
-                .subject(userDetails.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() * 1000 * 60 * 24))
-                .signWith(getSigningKey())
-                .compact();
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
