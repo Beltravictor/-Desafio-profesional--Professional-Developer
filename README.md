@@ -8,6 +8,7 @@ VuelosDH es una plataforma de reserva de vuelos es versión temprana, donde por 
 El backend está desarrollado en **Java + Spring Boot**
 Spring crea las tablas automáticamente y ejecuta data.sql creando contenido ejemplo para el repositorio.
 Es necesario el plugin de Lombok para la creación de Getters, Setters y Constructores.
+Se encuentra registrada la cuenta, email: admin@admin.com, passwod": adminA1!, que cuenta con rol de ADMIN.
 
 ## 🏗 Frontend
 El frontend está desarrollado en **React**.
