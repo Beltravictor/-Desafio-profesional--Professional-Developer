@@ -1,6 +1,6 @@
 # ✈️ VuelosDH - Viajá más, viví mejor
 
-VuelosDH es una plataforma de reserva de vuelos es versión temprana, donde por el momento se puede explorar por los diferentes destinos, ver en detalles sus características y administrar sus componentes.
+VuelosDH es una plataforma de reserva de vuelos es versión temprana, donde por el momento se puede explorar por los diferentes destinos, ver en detalles sus características, registrarse, iniciar sesión, administrar sus componentes.
 
 ---
 
