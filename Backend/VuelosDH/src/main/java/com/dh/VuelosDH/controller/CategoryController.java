@@ -23,6 +23,7 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CategoryDTO> save(@RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.ok(iCategoryService.save(categoryDTO));
     }

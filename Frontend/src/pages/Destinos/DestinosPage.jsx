@@ -3,9 +3,11 @@ import { DestinosContext } from "../../context/Destinos/DestinosContext"
 import { CategoriasContext } from "../../context/Categorias/CategoriasContext"
 import { PaginadoComponent } from "../../components/PaginadoComponent"
 import { OrdenarComponent } from "../../components/OrdenarComponent"
+import { useSearchParams } from "react-router-dom"
 
 export const DestinosPage = () => {
 
+    const [params] = useSearchParams()
     const { destinos, fetchDestinos } = useContext(DestinosContext)
     const { categorias, fetchCategorias } = useContext(CategoriasContext)
 
@@ -13,6 +15,7 @@ export const DestinosPage = () => {
     const [categoriasFiltro, setCategoriasFiltro] = useState([])
     const [orden, setOrden] = useState('')
     const [title, setTitle] = useState('')
+    const [pagina, setPagina] = useState(0);
 
     useEffect(() => {
         fetchDestinos()
@@ -20,8 +23,13 @@ export const DestinosPage = () => {
     }, [])
 
     useEffect(() => {
+        setCategoriasFiltro(params.get("categorias") ? params.get("categorias") != '' && params.get("categorias").split(',').map(Number) : [])
+        setOrden(params.get("orden") || '')
+        setPagina(Number(params.get("pagina")) != 0 ? Number(params.get("pagina")) : 0)
+    }, [])
+
+    useEffect(() => {
         if (!destinos || destinos.length === 0) {
-            setFiltrados([])
             return
         }
 
@@ -78,7 +86,7 @@ export const DestinosPage = () => {
             {filtrados.length === 0 ? (
                 <h2 className="subtitle">No se encontraron destinos.</h2>
             ) : (
-                <PaginadoComponent destinos={filtrados} />
+                <PaginadoComponent destinos={filtrados} pagina={pagina} setPagina={setPagina} />
             )}
         </>
 

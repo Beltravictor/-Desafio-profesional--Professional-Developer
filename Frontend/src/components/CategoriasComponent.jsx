@@ -15,7 +15,7 @@ export const CategoriasComponent = () => {
     return (
         <div className='categoria'>
             {categorias.map(cat => (
-                <NavLink key={cat.id} className="myLink" to={`/destinos/categoria/${cat.id}`}>
+                <NavLink key={cat.id} className="myLink" to={`/destinos?categorias=${cat.id}`}>
                     <div className="contenedor" id={cat.id}>
                         <div className='img-box'>
                             <img src={cat.url} alt={cat.name} />

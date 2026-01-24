@@ -58,7 +58,9 @@ export const AdministracionEditarCaracteristicasPage = () => {
             <div className="editar-container">
               <h2 className="form-title">Característica Editada Con Éxito</h2>
               <div className="botones-editar">
-                <button type="button" onClick={() => setConfirmacion(false)}>Guardar</button>
+                <NavLink className="myLink" to={`/administracion/caracteristicas`}>
+                  <button type="button" onClick={() => setConfirmacion(false)}>Guardar</button>
+                </NavLink>
               </div>
             </div>
           </div>

@@ -24,6 +24,7 @@ public class CharacteristicsController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CharacteristicsDTO> save(@RequestBody @Valid CharacteristicsDTO characteristicsDTO) {
         return ResponseEntity.ok(iCharacteristicsService.save(characteristicsDTO));
     }

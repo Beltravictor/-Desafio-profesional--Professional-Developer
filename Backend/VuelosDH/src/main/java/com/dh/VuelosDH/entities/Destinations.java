@@ -4,9 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "Destinations")
@@ -40,36 +38,43 @@ public class Destinations {
     @Column(name = "sample_price")
     private Double sample_price;
 
-    @Column(name = "rating")
-    private Float rating;
+    @OneToMany(mappedBy = "origin", cascade = CascadeType.ALL)
+    private List<Flights> origin;
 
-    public void setImages(List<Images> images) {
-        this.images.clear();
-        if (images != null) {
-            for (Images img : images) {
-                img.setDestination(this);
-                this.images.add(img);
-            }
-        }
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
+    private List<Flights> destination;
+
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
+    private List<Policies> policies;
+
+    @OneToMany(mappedBy = "destination")
+    private List<UserReviews> reviews;
+
+    public void addCharacteristic(Characteristics characteristic) {
+        Destinations_Characteristics dc = Destinations_Characteristics.builder()
+                .destination(this)
+                .characteristics(characteristic)
+                .build();
+
+        characteristics.add(dc);
     }
 
-    public void setCategories(Set<Destinations_Category> categories) {
-        this.categories.clear();
-        if (categories != null) {
-            for (Destinations_Category d_c : categories) {
-                d_c.setDestination(this);
-                this.categories.add(d_c);
-            }
-        }
+    public void addCategory(Category category) {
+        Destinations_Category dc = Destinations_Category.builder()
+                .destination(this)
+                .category(category)
+                .build();
+
+        categories.add(dc);
     }
 
-    public void setCharacteristics(Set<Destinations_Characteristics> characteristics) {
-        this.characteristics.clear();
-        if (characteristics != null) {
-            for (Destinations_Characteristics d_c : characteristics) {
-                d_c.setDestination(this);
-                this.characteristics.add(d_c);
-            }
-        }
+    public void addImage(String url) {
+        Images img = Images.builder()
+                .destination(this)
+                .url(url)
+                .build();
+
+        images.add(img);
     }
+
 }

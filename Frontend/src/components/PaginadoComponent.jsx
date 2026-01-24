@@ -2,18 +2,12 @@ import { useEffect, useState } from 'react'
 import '../styles/PaginadoComponent.css'
 import { RecomendacionesComponent } from './RecomendacionesComponent';
 
-export const PaginadoComponent = ({ destinos }) => {
-    const [pagina, setPagina] = useState(0);
-
+export const PaginadoComponent = ({ destinos, pagina, setPagina }) => {
+    
     const destinosPorPagina = 10;
     const inicio = pagina * destinosPorPagina;
     const destinosActuales = destinos.slice(inicio, inicio + destinosPorPagina);
     const totalPaginas = Math.ceil(destinos.length / destinosPorPagina);
-
-    useEffect(() => {
-        setPagina(0)
-    }, [destinos])
-
 
     useEffect(() => {
         window.scrollTo(0, 0)

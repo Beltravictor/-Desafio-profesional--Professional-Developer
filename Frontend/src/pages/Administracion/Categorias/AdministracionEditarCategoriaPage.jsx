@@ -60,7 +60,9 @@ export const AdministracionEditarCategoriaPage = () => {
             <div className="editar-container">
               <h2 className="form-title">Categoría Editada Con Éxito</h2>
               <div className="botones-editar">
-                <button type="button" onClick={() => setConfirmacion(false)}>Guardar</button>
+                <NavLink className="myLink" to={`/administracion/categorias`}>
+                  <button type="button" onClick={() => setConfirmacion(false)}>Guardar</button>
+                </NavLink>    
               </div>
             </div>
           </div>

@@ -5,6 +5,8 @@ import com.dh.VuelosDH.dto.UserDTO;
 import com.dh.VuelosDH.entities.Role;
 import com.dh.VuelosDH.entities.User;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
+import com.dh.VuelosDH.mapper.UserMapper;
+import com.dh.VuelosDH.repository.IDestinationsRepository;
 import com.dh.VuelosDH.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -29,6 +32,9 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    private final UserMapper userMapper;
+    private final IDestinationsRepository iDestinationsRepository;
+
     public AuthenticationResponse register(RegisterRequest request) {
 
         if (iUserRepository.findByEmail(request.getEmail()).isPresent())
@@ -42,6 +48,9 @@ public class AuthenticationService {
                 .role(Role.ROLE_USER)
                 .creationDate(Calendar.getInstance().getTime())
                 .build();
+
+        user.setReservations(new ArrayList<>());
+        user.setPassengers(new ArrayList<>());
 
         iUserRepository.save(user);
         var jwt = jwtService.generateToken(user);
@@ -72,31 +81,9 @@ public class AuthenticationService {
         List<User> users = iUserRepository.findAll();
         List<UserDTO> usersDTO = new ArrayList<>();
         for (User user : users) {
-            var aux = UserDTO.builder()
-                    .id(user.getId())
-                    .firstname(user.getFirstname())
-                    .lastname(user.getLastname())
-                    .email(user.getEmail())
-                    .role(user.getRole())
-                    .creationDate(user.getCreationDate())
-                    .build();
-            usersDTO.add(aux);
+            usersDTO.add(userMapper.toDto(user));
         }
         return usersDTO;
-    }
-
-    public UserDTO getProfile(String email) {
-        var user = iUserRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
-
-        return UserDTO.builder()
-                .id(user.getId())
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .creationDate(user.getCreationDate())
-                .build();
     }
 
     public void deleteById(Long id) throws ResourceNotFoundException {
@@ -107,28 +94,11 @@ public class AuthenticationService {
             throw new ResourceNotFoundException("No se puedo eliminar el usuario con id: " + id);
     }
 
-    public ResponseEntity<String> update(UserDTO userDTO) {
-        Optional<User> userToLookFor = iUserRepository.findById(userDTO.getId());
-        if (userToLookFor.isPresent()) {
-            var user = User.builder()
-                    .id(userToLookFor.get().getId())
-                    .firstname(userDTO.getFirstname())
-                    .lastname(userDTO.getLastname())
-                    .email(userDTO.getEmail())
-                    .role(userDTO.getRole())
-                    .creationDate(userToLookFor.get().getCreationDate())
-                    .flight(userToLookFor.get().getFlight())
-                    .password(userToLookFor.get().getPassword())
-                    .build();
-            iUserRepository.save(user);
-            return ResponseEntity.ok("Se actualizo el Usuario con éxito");
-        } else
-            return ResponseEntity.ok("No se pudo actualizar el Usuario");
+    public UserDTO update(UserDTO userDTO) {
+        var password = iUserRepository.findByEmail(userDTO.getEmail())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
+        User saved = iUserRepository.save(userMapper.toUser(userDTO, password.getPassword()));
+       return userMapper.toDto(saved);
     }
 
-    public void deleteMyUser(String email) {
-        var user = iUserRepository.findByEmail(email)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
-        iUserRepository.deleteById(user.getId());
-    }
 }

@@ -18,7 +18,8 @@ public class DestinationsController {
     private final IDestinationsService iDestinationsService;
 
     @PostMapping
-    public ResponseEntity<DestinationsDTO> save(@RequestBody DestinationsDTO destinationsDTO) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<DestinationsDTO> save(@RequestBody DestinationsDTO destinationsDTO) throws Exception {
         return ResponseEntity.ok(iDestinationsService.save(destinationsDTO));
     }
 
@@ -29,7 +30,7 @@ public class DestinationsController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DestinationsDTO> findById(@PathVariable Long id) throws ResourceNotFoundException {
-        return iDestinationsService.findById(id);
+        return ResponseEntity.ok(iDestinationsService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -41,8 +42,8 @@ public class DestinationsController {
 
     @PutMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> update(@RequestBody DestinationsDTO destinationsDTO) throws ResourceNotFoundException {
-        return iDestinationsService.update(destinationsDTO);
+    public ResponseEntity<DestinationsDTO> update(@RequestBody DestinationsDTO destinationsDTO) throws ResourceNotFoundException {
+        return ResponseEntity.ok(iDestinationsService.update(destinationsDTO));
     }
 
     @GetMapping("/random/{nro}")
@@ -57,6 +58,11 @@ public class DestinationsController {
 
     @GetMapping("/nombre/{name}")
     public ResponseEntity<DestinationsDTO> findByName(@PathVariable String name) throws ResourceNotFoundException {
-        return iDestinationsService.findByName(name);
+        return ResponseEntity.ok(iDestinationsService.findByName(name));
+    }
+
+    @GetMapping("/vuelo/{id}")
+    public ResponseEntity<List<DestinationsDTO>> destinationsByFlight(@PathVariable Long id) throws ResourceNotFoundException {
+        return ResponseEntity.ok(iDestinationsService.destinationsByFlight(id));
     }
 }

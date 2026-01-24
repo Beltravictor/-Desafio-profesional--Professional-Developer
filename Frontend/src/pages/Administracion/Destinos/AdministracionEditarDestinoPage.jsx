@@ -107,7 +107,9 @@ export const AdministracionEditarDestinoPage = () => {
             <div className="editar-container">
               <h2 className="form-title">Destino Editado Con Éxito</h2>
               <div className="botones-editar">
-                <button type="button" onClick={() => setConfirmacion(false)}>Guardar</button>
+                <NavLink className="myLink" to={`/administracion/destinos`}>
+                  <button type="button" onClick={() => setConfirmacion(false)}>Guardar</button>
+                </NavLink>
               </div>
             </div>
           </div>

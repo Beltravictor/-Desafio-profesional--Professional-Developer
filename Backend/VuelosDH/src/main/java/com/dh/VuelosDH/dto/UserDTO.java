@@ -29,8 +29,9 @@ public class UserDTO {
     @NotNull(message = "El rol no puede ser nulo")
     private Role role;
 
-    private List<Long> flights = new ArrayList<>();
-
     @PastOrPresent(message = "La fecha de creación no puede ser futura")
     private Date creationDate;
+
+    private Set<Long> favorites;
+
 }

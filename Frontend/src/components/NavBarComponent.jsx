@@ -40,6 +40,7 @@ export const NavBarComponent = () => {
 
             <ul className="center-menu">
                 <li><NavLink className="myLink" to='/'>Vuelos</NavLink></li>
+                <li><NavLink className="myLink" to='/reservas'>Reservas</NavLink></li>
                 <li><NavLink className="myLink" to='/destinos'>Destinos</NavLink></li>
                 {user?.role === 'ROLE_ADMIN' &&
                     <li><NavLink className="myLink" to='/administracion'>Administración</NavLink></li>
@@ -48,7 +49,7 @@ export const NavBarComponent = () => {
 
             {user ? (
                 <div className="registro">
-                    <h2>Bienvenido, {user.name}!</h2>
+                    <h2>Bienvenido,<br /> {user.name}!</h2>
                     <AvatarPerfilComponent onClick={() => toggleProfileMenu()} className='nav-profile'/>
                     {proflileMenu && (
                         <div className="profile-menu">
@@ -82,7 +83,7 @@ export const NavBarComponent = () => {
                 {user ? (
 
                     <div className="registro-mobile">
-                        <h2>Bienvenido, {user.name}!</h2>
+                        <h2>Bienvenido, <br />{user.name}!</h2>
                         <NavLink className="myLink" to='/perfil'>
                             <button className='nav-btn'>Ver Perfil</button>
                         </NavLink>

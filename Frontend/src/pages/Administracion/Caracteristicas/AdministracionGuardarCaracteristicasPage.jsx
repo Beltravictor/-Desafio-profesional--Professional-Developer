@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from 'react'
-import { CategoriasContext } from "../../../context/Categorias/CategoriasContext"
 import '../../../styles/AdministracionEditar.css'
 import '../../../styles/DestinosComponent.css'
 import { NavLink } from 'react-router-dom'

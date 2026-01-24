@@ -4,24 +4,44 @@ import '../../styles/PerfilUsuarioPage.css'
 import { UsuarioContext } from '../../context/Usuario/UsuarioContext'
 import { NavLink } from 'react-router-dom'
 import { AvatarPerfilComponent } from '../../components/AvatarPerfilComponent'
+import { MyUserContext } from '../../context/MyUser/MyUserContext'
+import { DestinoFavoritoComponent } from '../../components/DestinoFavoritoComponent'
+import { ReservaUserComponent } from '../../components/ReservaUserComponent'
 
 export const PerfilUsuarioPage = () => {
 
     const { user, logout } = useContext(AuthContext)
-    const { profile, setProfile, getProfile, setToken, eliminarMiUsuario } = useContext(UsuarioContext)
+    const { misReservas,
+        verMiReservas,
+        misPasajeros,
+        verMipasajeros,
+        misTickets,
+        verMiTickets,
+        destinosFavoritos,
+        getDestinosFavoritos } = useContext(MyUserContext)
+    const { profile, setProfile, getProfile, setToken, eliminarMiUsuario, addFavorite, removeFavorite } = useContext(UsuarioContext)
     const [confirmacionBorrar, setConfirmacionBorrar] = useState(false)
-
-    const cerrarSesion = () => {
-        logout()
-        setToken(null)
-        setProfile({})
-    }
+    const [seccionFavoritos, setSeccionFavoritos] = useState(false)
+    const [seccionReservas, setSeccionReservas] = useState(false)
 
     useEffect(() => {
         if (user) {
             getProfile(user.token)
         }
     }, [user])
+
+    useEffect(() => {
+        if (user && profile) {
+            getDestinosFavoritos(user.token)
+            verMiReservas(user.token)
+        }
+    }, [profile])
+
+    const cerrarSesion = () => {
+        logout()
+        setToken(null)
+        setProfile({})
+    }
 
     const eliminarCuenta = () => {
         eliminarMiUsuario(user.token)
@@ -54,6 +74,8 @@ export const PerfilUsuarioPage = () => {
         )
     }
 
+
+
     return (
         <div className="profile-container">
             {
@@ -78,7 +100,7 @@ export const PerfilUsuarioPage = () => {
                 <div className="profile-info">
                     <h3>Información</h3>
                     <p><strong>País:</strong> Argentina</p>
-                    <p><strong>Miembro desde: </strong>{profile.creationDate?profile.creationDate.slice(0,10): 'admin'}</p>
+                    <p><strong>Miembro desde: </strong>{profile.creationDate ? profile.creationDate.slice(0, 10) : 'admin'}</p>
                     <p><strong>Rol: </strong>{profile?.role.slice(5)}</p>
                 </div>
 
@@ -87,6 +109,44 @@ export const PerfilUsuarioPage = () => {
                 </NavLink>
                 <button className='delete-button' onClick={() => setConfirmacionBorrar(true)}>Eliminar Cuenta</button>
             </div>
+
+            <button
+                className={`favoritos-toggle ${seccionFavoritos ? "open" : ""}`}
+                onClick={() => setSeccionFavoritos(!seccionFavoritos)}
+                aria-expanded={seccionFavoritos}
+            >
+                <span className="toggle-text">
+                    {seccionFavoritos ? "Ocultar favoritos" : "Mostrar favoritos"}
+                </span>
+
+                <span className="toggle-icon" />
+            </button>
+            {seccionFavoritos &&
+                <div className='favs-container'>
+                    {destinosFavoritos.map((destino) => (
+                        <DestinoFavoritoComponent key={destino.id} destino={destino} addFavorite={addFavorite} removeFavorite={removeFavorite} token={user.token} />
+                    ))}
+                </div>
+            }
+
+            <button
+                className={`favoritos-toggle ${seccionReservas ? "open" : ""}`}
+                onClick={() => setSeccionReservas(!seccionReservas)}
+                aria-expanded={seccionReservas}
+            >
+                <span className="toggle-text">
+                    {seccionReservas ? "Ocultar reservas" : "Mostrar reservas"}
+                </span>
+
+                <span className="toggle-icon" />
+            </button>
+            {seccionReservas &&
+                <div className='favs-container'>
+                    {misReservas.map((reserva) =>(
+                        <ReservaUserComponent key={reserva.id} reserva={reserva} />
+                        ))}
+                </div>
+            }
         </div>
     )
 }

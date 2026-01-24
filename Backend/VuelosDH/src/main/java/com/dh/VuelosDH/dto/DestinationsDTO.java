@@ -1,12 +1,11 @@
 package com.dh.VuelosDH.dto;
 
+import com.dh.VuelosDH.entities.Flights;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -22,13 +21,13 @@ public class DestinationsDTO {
     private String name;
 
     @NotEmpty(message = "Debe incluir al menos una imagen")
-    private List<@NotBlank(message = "La URL de la imagen no puede estar vacía") String> images = new ArrayList<>();
+    private List<@NotBlank(message = "La URL de la imagen no puede estar vacía") String> images;
 
     @NotEmpty(message = "Debe tener al menos una categoría")
-    private List<@NotNull(message = "El ID de categoría no puede ser nulo") Long> categories = new ArrayList<>();
+    private List<@NotNull(message = "El ID de categoría no puede ser nulo") Long> categories;
 
     @NotEmpty(message = "Debe tener al menos una característica")
-    private List<@NotNull(message = "El ID de característica no puede ser nulo") Long> characteristics = new ArrayList<>();
+    private List<@NotNull(message = "El ID de característica no puede ser nulo") Long> characteristics;
 
     @NotBlank(message = "La descripción no puede estar vacía")
     private String description;
@@ -37,8 +36,8 @@ public class DestinationsDTO {
     @Positive(message = "El precio debe ser mayor que 0")
     private Double sample_price;
 
-    @NotNull(message = "El rating no puede ser nulo")
-    @Min(value = 0, message = "El rating no puede ser menor que 0")
-    @Max(value = 5, message = "El rating no puede ser mayor que 5")
-    private Float rating;
+    private List<PoliciesDTO> policies;
+
+    private List<Long> reviews;
+
 }

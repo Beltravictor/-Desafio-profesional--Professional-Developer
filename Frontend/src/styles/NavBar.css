@@ -11,7 +11,7 @@
   background-color: #E7FBFF;
   color: #03588C;
   font-weight: bold;
-  z-index: 100;
+  z-index: 99999;
 }
 
 .logo-area {

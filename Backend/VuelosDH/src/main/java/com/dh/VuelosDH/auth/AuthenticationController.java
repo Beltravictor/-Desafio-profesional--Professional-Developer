@@ -34,10 +34,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.findAll());
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<UserDTO> getProfile(Authentication authentication) {
-        return ResponseEntity.ok(authenticationService.getProfile(authentication.getName()));
-    }
 
     @DeleteMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
@@ -48,13 +44,7 @@ public class AuthenticationController {
 
     @PutMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> update(@RequestBody UserDTO userDTO) throws ResourceNotFoundException {
-        return authenticationService.update(userDTO);
-    }
-
-    @DeleteMapping("/deletemyuser")
-    public ResponseEntity<String> deleteMyUser(Authentication authentication){
-        authenticationService.deleteMyUser(authentication.getName());
-        return ResponseEntity.ok("Se elimino su usuario con éxito");
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO) throws ResourceNotFoundException {
+        return ResponseEntity.ok(authenticationService.update(userDTO));
     }
 }

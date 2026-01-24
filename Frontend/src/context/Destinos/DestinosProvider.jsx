@@ -24,8 +24,8 @@ export const DestinosProvider = ({ children }) => {
                     "Authorization": `Bearer ${token}`
                 },
                 body: JSON.stringify(destino)
-            });
-            fetchDestinos();
+            })
+            fetchDestinos()
             const data = await res.json()
 
         } catch (error) {
@@ -40,12 +40,12 @@ export const DestinosProvider = ({ children }) => {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }
-            });
+            })
 
             if (!res.ok) {
                 throw new Error("Error al eliminar")
             }
-            fetchDestinos();
+            fetchDestinos()
             console.log("Eliminado correctamente")
         } catch (error) {
             console.error("Error:", error)
@@ -62,10 +62,10 @@ export const DestinosProvider = ({ children }) => {
                 },
                 body: JSON.stringify(newDestino)
             })
-            const data = await res.text();
-            console.log("Respuesta:", data);
+            const data = await res.text()
+            console.log("Respuesta:", data)
         } catch (error) {
-            console.error("Error al Actualizar:", error);
+            console.error("Error al Actualizar:", error)
         }
     }
 
@@ -119,10 +119,24 @@ export const DestinosProvider = ({ children }) => {
             if (!res.ok) {
                 const text = await res.text()
                 setDestinoPorNombre({})
-                return;
+                return
             }
             const data = await res.json()
             setDestinoPorNombre(data)
+        } catch (error) {
+            console.error(error)
+        }
+
+    }
+
+    const [destinosPorVuelo, setDestinosPorVuelo] = useState([])
+
+    const buscarDestinosPorVuelo = async (id) => {
+        try {
+            const res = await fetch(`http://localhost:8081/destinos/vuelo/${id}`)
+            const data = await res.json()
+            setDestinosPorVuelo(data)
+            return data
         } catch (error) {
             console.error(error)
         }
@@ -137,7 +151,8 @@ export const DestinosProvider = ({ children }) => {
             random, destinosRandoms,
             categoria, destinosCategorias,
             destinoPorID, buscarDestinoPorId,
-            destinoPorNombre, buscarDestinoPorNombre
+            destinoPorNombre, buscarDestinoPorNombre,
+            destinosPorVuelo, buscarDestinosPorVuelo
         }}>
             {children}
         </DestinosContext>

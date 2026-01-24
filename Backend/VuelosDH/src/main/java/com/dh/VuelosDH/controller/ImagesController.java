@@ -4,23 +4,20 @@ import com.dh.VuelosDH.dto.ImagesDTO;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.service.IImagesService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/imagenes")
+@RequiredArgsConstructor
 public class ImagesController {
 
     private final IImagesService iImagesService;
-
-    @Autowired
-    public ImagesController(IImagesService iImagesService) {
-        this.iImagesService = iImagesService;
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<ImagesDTO> findById(@PathVariable Long id) throws ResourceNotFoundException {
@@ -33,6 +30,7 @@ public class ImagesController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ImagesDTO> save(@RequestBody @Valid  ImagesDTO imagesDTO) {
         return ResponseEntity.ok(iImagesService.save(imagesDTO));
     }

@@ -4,20 +4,16 @@ import com.dh.VuelosDH.entities.Destinations_Category;
 import com.dh.VuelosDH.exception.ResourceNotFoundException;
 import com.dh.VuelosDH.repository.IDestinations_CategoryRepository;
 import com.dh.VuelosDH.service.IDestinations_CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class IDestinations_CategoryServiceImpl implements IDestinations_CategoryService {
     private final IDestinations_CategoryRepository destinations_categoryRepository;
-
-    @Autowired
-    public IDestinations_CategoryServiceImpl(IDestinations_CategoryRepository destinations_categoryRepository) {
-        this.destinations_categoryRepository = destinations_categoryRepository;
-    }
 
     @Override
     public Destinations_Category save(Destinations_Category destination_category) {

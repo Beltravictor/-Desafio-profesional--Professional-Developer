@@ -38,11 +38,54 @@ public class User implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Flight> flight = new ArrayList<>();
-
     @Column(name = "creationDate")
     private Date creationDate;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "favorites")
+    private Set<Destinations> favorites;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Reservations> reservations;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Passengers> passengers;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<UserReviews> reviews;
+
+    public void addReservation(Reservations reservation) {
+        reservation.setUser(this);
+        reservations.add(reservation);
+    }
+
+    public void removeReservation(Reservations reservation) {
+        reservations.remove(reservation);
+        reservation.setUser(null);
+    }
+
+    public void addPassenger(Passengers passenger) {
+        passenger.setUser(this);
+        passengers.add(passenger);
+    }
+
+    public void removePassenger(Passengers passenger) {
+        passengers.remove(passenger);
+        passenger.setUser(null);
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

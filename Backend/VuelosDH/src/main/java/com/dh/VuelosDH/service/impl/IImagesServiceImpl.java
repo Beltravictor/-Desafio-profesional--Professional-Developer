@@ -8,7 +8,6 @@ import com.dh.VuelosDH.repository.IDestinationsRepository;
 import com.dh.VuelosDH.repository.IImagesRepository;
 import com.dh.VuelosDH.service.IImagesService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ public class IImagesServiceImpl implements IImagesService {
 
     private final IImagesRepository iImagesrepository;
     private final IDestinationsRepository iDestinationsRepository;
-
 
     @Override
     public ImagesDTO save(ImagesDTO imagesDTO) {
@@ -61,8 +59,7 @@ public class IImagesServiceImpl implements IImagesService {
         Images img = new Images();
         img.setUrl(imagesDTO.getUrl());
         Optional<Destinations> destinations = iDestinationsRepository.findById(imagesDTO.getDestination_id());
-        if (destinations.isPresent())
-            img.setDestination(destinations.get());
+        destinations.ifPresent(img::setDestination);
         iImagesrepository.save(img);
     }
 
