@@ -1,6 +1,7 @@
 package com.dh.VuelosDH.controller;
 
 import com.dh.VuelosDH.dto.*;
+import com.dh.VuelosDH.entities.UserReviews;
 import com.dh.VuelosDH.service.IMyUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +67,13 @@ public class MyUserController {
         return ResponseEntity.ok("Reserva eliminada con éxito");
     }
 
+    @GetMapping("/reserva/vuelos")
+    public ResponseEntity<List<FlightsDTO>> myReservationsFlights(Authentication authentication) {
+        return ResponseEntity.ok(iMyUserService.myReservationsFlights(authentication.getName()));
+    }
+
+
+
 
     @PostMapping("/pasajero")
     public ResponseEntity<PassengersDTO> saveMyPassenger(@RequestBody PassengersDTO dto, Authentication authentication) throws ResponseStatusException {
@@ -120,4 +128,22 @@ public class MyUserController {
     public ResponseEntity<List<DestinationsDTO>> findMyFavoritesDestinations(Authentication authentication) throws  ResponseStatusException {
         return ResponseEntity.ok(iMyUserService.findMyFavoritesDestinations(authentication.getName()));
     }
+
+
+    @GetMapping("/review")
+    public ResponseEntity<List<UserReviewsDTO>> findMyReviews(Authentication authentication) {
+        return ResponseEntity.ok(iMyUserService.findMyReviews(authentication.getName()));
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<UserReviewsDTO> createMyReview(Authentication authentication, @RequestBody UserReviewsDTO dto) {
+        return ResponseEntity.ok(iMyUserService.createMyReview(authentication.getName(), dto));
+    }
+
+    @DeleteMapping("/review/{id}")
+    public ResponseEntity<String> deleteMyReview(Authentication authentication, @PathVariable Long id) {
+        iMyUserService.deleteMyReview(authentication.getName(), id);
+        return ResponseEntity.ok("Reseña eliminado con éxito");
+    }
+
 }

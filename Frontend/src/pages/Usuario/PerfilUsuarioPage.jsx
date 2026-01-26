@@ -7,22 +7,28 @@ import { AvatarPerfilComponent } from '../../components/AvatarPerfilComponent'
 import { MyUserContext } from '../../context/MyUser/MyUserContext'
 import { DestinoFavoritoComponent } from '../../components/DestinoFavoritoComponent'
 import { ReservaUserComponent } from '../../components/ReservaUserComponent'
+import { MisReviewsComponent } from '../../components/MisReviewsComponent'
 
 export const PerfilUsuarioPage = () => {
 
     const { user, logout } = useContext(AuthContext)
     const { misReservas,
         verMiReservas,
+        eliminarMiReservaPorId,
         misPasajeros,
         verMipasajeros,
         misTickets,
         verMiTickets,
         destinosFavoritos,
-        getDestinosFavoritos } = useContext(MyUserContext)
+        getDestinosFavoritos,
+        misReviews,
+        getMisReviews,
+        eliminarMiReviewPorId } = useContext(MyUserContext)
     const { profile, setProfile, getProfile, setToken, eliminarMiUsuario, addFavorite, removeFavorite } = useContext(UsuarioContext)
     const [confirmacionBorrar, setConfirmacionBorrar] = useState(false)
     const [seccionFavoritos, setSeccionFavoritos] = useState(false)
     const [seccionReservas, setSeccionReservas] = useState(false)
+    const [seccionReviews, setSeccionReviews] = useState(false)
 
     useEffect(() => {
         if (user) {
@@ -34,6 +40,7 @@ export const PerfilUsuarioPage = () => {
         if (user && profile) {
             getDestinosFavoritos(user.token)
             verMiReservas(user.token)
+            getMisReviews(user.token)
         }
     }, [profile])
 
@@ -48,16 +55,30 @@ export const PerfilUsuarioPage = () => {
         cerrarSesion()
     }
 
+    const cancelarReserva = async (id) => {
+        await eliminarMiReservaPorId(user.token, id)
+        await verMiReservas(user.token)
+    }
+
+    const actualizarReviews = async () => {
+        await getMisReviews(user.token)
+    }
+
+    const borrarReview = async (id) => {
+        await eliminarMiReviewPorId(user.token, id)
+        await getMisReviews(user.token)
+    }
+
 
     if (!user) {
         return (
             <div className="profile-container">
                 <div className="profile-card">
                     <h2 className="profile-name">Para ver tu Perfil Inicia Sesión</h2>
-                    <NavLink className="myLink" to='/registro'>
+                    <NavLink className="myLink" to='/login'>
                         <button className="edit-button">Iniciar Sesión</button>
                     </NavLink>
-                    <NavLink className="myLink" to='/login'>
+                    <NavLink className="myLink" to='/registro'>
                         <button className="edit-button">¿Todavía no tenes una cuenta? Registrate!</button>
                     </NavLink>
                 </div>
@@ -142,9 +163,28 @@ export const PerfilUsuarioPage = () => {
             </button>
             {seccionReservas &&
                 <div className='favs-container'>
-                    {misReservas.map((reserva) =>(
-                        <ReservaUserComponent key={reserva.id} reserva={reserva} />
-                        ))}
+                    {misReservas.map((reserva) => (
+                        <ReservaUserComponent key={reserva.id} reserva={reserva} actualizarReviews={actualizarReviews} cancelarReserva={cancelarReserva} />
+                    ))}
+                </div>
+            }
+
+            <button
+                className={`favoritos-toggle ${seccionReviews ? "open" : ""}`}
+                onClick={() => setSeccionReviews(!seccionReviews)}
+                aria-expanded={seccionReviews}
+            >
+                <span className="toggle-text">
+                    {seccionReviews ? "Ocultar reseñas" : "Mostrar reseñas"}
+                </span>
+
+                <span className="toggle-icon" />
+            </button>
+            {seccionReviews &&
+                <div className='favs-container'>
+                    {misReviews?.map((review) => (
+                        <MisReviewsComponent key={review.id} review={review} eliminarReview={borrarReview} />
+                    ))}
                 </div>
             }
         </div>

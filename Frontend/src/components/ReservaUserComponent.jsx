@@ -1,11 +1,15 @@
 import { useContext, useEffect, useState } from "react"
 import { DestinosContext } from "../context/Destinos/DestinosContext"
 import '../styles/ReservaUserComponent.css'
+import { CrearReviewComponent } from "./CrearReviewComponent"
+import { NavLink } from "react-router-dom"
 
-export const ReservaUserComponent = ({ reserva }) => {
+export const ReservaUserComponent = ({ reserva, actualizarReviews, cancelarReserva }) => {
 
     const { buscarDestinosPorVuelo } = useContext(DestinosContext)
     const [misVuelos, setMisVuelos] = useState([])
+    const [openCrearReview, setOpenCrearReview] = useState(false)
+    const [openCancelarReview, setOpenCacenlarReview] = useState(false)
 
     useEffect(() => {
         const cargarDestinos = async () => {
@@ -28,7 +32,9 @@ export const ReservaUserComponent = ({ reserva }) => {
         <div className="reservation-card">
 
             <div className="reservation-image">
-                <img src={misVuelos[1].images[0]} alt={misVuelos[1].name} />
+                <NavLink to={`/destinoinfo/${misVuelos[1].id}`} className='logo myLink'>
+                    <img src={misVuelos[1].images[0]} alt={misVuelos[1].name} />
+                </NavLink>
             </div>
 
             <div className="reservation-content">
@@ -57,12 +63,43 @@ export const ReservaUserComponent = ({ reserva }) => {
                     </div>
 
                     <button
+                        className="review-button"
+                        onClick={() => setOpenCrearReview(!openCrearReview)}
+                    >
+                        Añadir Reseña
+                    </button>
+
+                    <button
                         className="pay-button"
-                        // onClick={handlePay}
+                        // onClick={Pagar}
                         disabled={reserva.reservationStatus !== "CREATED"}
                     >
                         Pagar
                     </button>
+
+                    <button
+                        className="cancelar-button"
+                        onClick={() => setOpenCacenlarReview(true)}
+                        disabled={reserva.reservationStatus !== "CREATED"}
+                    >
+                        Cancelar
+                    </button>
+
+                    {
+                        openCancelarReview &&
+                        <div className="editar-form">
+                            <div className="editar-container">
+                                <h2 className="form-title">{`¿Seguro que quiere cancelar su reservar un vuelo de ${misVuelos[0].name} a ${misVuelos[1].name}?`}</h2>
+                                <div className="botones-editar">
+                                    <button className='edit-button' onClick={() => setOpenCacenlarReview(false)}>Mantener Reserva</button>
+                                    <button className='delete-button' onClick={() => cancelarReserva(reserva.id)}>Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    {openCrearReview &&
+                        <CrearReviewComponent onClose={setOpenCrearReview} destination_id={misVuelos[1].id} actualizarReviews={actualizarReviews} />}
                 </div>
             </div>
         </div>

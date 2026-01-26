@@ -1,0 +1,105 @@
+.reviews-container {
+    position: relative;
+    width: 80%;
+    cursor: pointer;
+}
+
+.reviews-container:not(.expanded) {
+    max-height: 300px;
+    overflow: hidden;
+}
+
+.fade-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-height: 80px;
+    background: linear-gradient(to bottom,
+            rgba(255, 255, 255, 0),
+            #ffffff);
+    pointer-events: none;
+}
+
+
+.review-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.mi-review-card {
+    background: #ffffff;
+    width: auto;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.review-text {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+.stars {
+    display: flex;
+    gap: 4px;
+}
+
+.star {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.star.full {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23f5b301' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 .587l3.668 7.431L24 9.423l-6 5.847L19.335 24 12 20.202 4.665 24 6 15.27 0 9.423l8.332-1.405z'/></svg>");
+}
+
+.star.half {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><defs><linearGradient id='half'><stop offset='50%' stop-color='%23f5b301'/><stop offset='50%' stop-color='%23ddd'/></linearGradient></defs><path fill='url(%23half)' d='M12 .587l3.668 7.431L24 9.423l-6 5.847L19.335 24 12 20.202 4.665 24 6 15.27 0 9.423l8.332-1.405z'/></svg>");
+}
+
+.star.empty {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23ddd' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 .587l3.668 7.431L24 9.423l-6 5.847L19.335 24 12 20.202 4.665 24 6 15.27 0 9.423l8.332-1.405z'/></svg>");
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.review-user {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2a44;
+}
+
+.review-date {
+  font-size: 12px;
+  color: #888;
+  white-space: nowrap;
+}
+
+.delete-review-btn {
+  background: transparent;
+  border: none;
+  color: #999;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+
+.delete-review-btn:hover {
+  color: #e53935;
+}

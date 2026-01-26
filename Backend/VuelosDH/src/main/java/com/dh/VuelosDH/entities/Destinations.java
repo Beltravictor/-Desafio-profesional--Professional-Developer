@@ -24,13 +24,13 @@ public class Destinations {
     private String name;
 
     @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Images> images = new ArrayList<>();
+    private List<Images> images;
 
     @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Destinations_Category> categories = new ArrayList<>();
+    private List<Destinations_Category> categories;
 
     @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Destinations_Characteristics> characteristics = new ArrayList<>();
+    private List<Destinations_Characteristics> characteristics;
 
     @Column(name = "description")
     private String description;
@@ -38,19 +38,21 @@ public class Destinations {
     @Column(name = "sample_price")
     private Double sample_price;
 
-    @OneToMany(mappedBy = "origin", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "origin", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flights> origin;
 
-    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Flights> destination;
 
-    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Policies> policies;
 
-    @OneToMany(mappedBy = "destination")
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReviews> reviews;
 
     public void addCharacteristic(Characteristics characteristic) {
+        if(characteristics == null)
+            setCharacteristics(new ArrayList<>());
         Destinations_Characteristics dc = Destinations_Characteristics.builder()
                 .destination(this)
                 .characteristics(characteristic)
@@ -60,6 +62,8 @@ public class Destinations {
     }
 
     public void addCategory(Category category) {
+        if(categories == null)
+            setCategories(new ArrayList<>());
         Destinations_Category dc = Destinations_Category.builder()
                 .destination(this)
                 .category(category)
@@ -69,6 +73,8 @@ public class Destinations {
     }
 
     public void addImage(String url) {
+        if(images == null)
+            setImages(new ArrayList<>());
         Images img = Images.builder()
                 .destination(this)
                 .url(url)

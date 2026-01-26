@@ -3,6 +3,7 @@ package com.dh.VuelosDH.mapper;
 import com.dh.VuelosDH.dto.UserDTO;
 import com.dh.VuelosDH.entities.Destinations;
 import com.dh.VuelosDH.entities.User;
+import com.dh.VuelosDH.entities.UserReviews;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -22,6 +23,9 @@ public class UserMapper {
                         .stream()
                         .map(Destinations::getId)
                         .collect(Collectors.toSet()))
+                .reviews(user.getReviews().stream()
+                        .map(UserReviews::getId)
+                        .toList())
                 .build();
     }
 

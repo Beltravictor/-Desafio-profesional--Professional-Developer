@@ -27,12 +27,15 @@ public class IMyUserServiceImpl implements IMyUserService {
     private final IUserRepository iUserRepository;
     private final ITicketsRepository iTicketsRepository;
     private final IFlightsRepository iFlightsRepository;
+    private final IUserReviewsRepository iUserReviewsRepository;
 
     private final ReservationsMapper reservationsMapper;
     private final PassengersMapper passengersMapper;
     private final TicketsMapper ticketsMapper;
     private final UserMapper userMapper;
     private final DestinationsMapper destinationsMapper;
+    private final UserReviewsMapper userReviewsMapper;
+    private final FlightsMapper flightsMapper;
 
     @Override
     public UserDTO getProfile(String email) {
@@ -101,7 +104,7 @@ public class IMyUserServiceImpl implements IMyUserService {
         res.setReservationStatus(Status.CREATED);
         user.addReservation(res);
         startFlight.addStartFlight(res);
-        if(dto.getReturnFlight() != null){
+        if (dto.getReturnFlight() != null) {
             Flights returnFlight = iFlightsRepository.findById(dto.getReturnFlight())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error no se encontró el vuelo de vuelta"));
             returnFlight.addReturnFlight(res);
@@ -165,7 +168,7 @@ public class IMyUserServiceImpl implements IMyUserService {
         res.setCreationDate(reservations.getCreationDate());
         res.setTickets(reservations.getTickets());
         startFlight.addStartFlight(res);
-        if(dto.getReturnFlight() != null){
+        if (dto.getReturnFlight() != null) {
             Flights returnFlight = iFlightsRepository.findById(dto.getReturnFlight())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error no se encontró el vuelo de vuelta"));
             returnFlight.addReturnFlight(res);
@@ -193,7 +196,7 @@ public class IMyUserServiceImpl implements IMyUserService {
 
         startFlight.removeStartFlight(res);
 
-        if(res.getReturnFlight().getId() != 0){
+        if (res.getReturnFlight() != null) {
             Flights returnFlight = iFlightsRepository.findById(res.getReturnFlight().getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error no se encontró el vuelo de vuelta"));
             returnFlight.removeReturnFlight(res);
@@ -385,11 +388,77 @@ public class IMyUserServiceImpl implements IMyUserService {
         List<Destinations> destinations = iDestinationsRepository.findAllById(userDTO.getFavorites());
 
         List<DestinationsDTO> destinationsDTOS = new ArrayList<>();
-        for(Destinations des : destinations) {
+        for (Destinations des : destinations) {
             destinationsDTOS.add(destinationsMapper.toDto(des));
         }
 
         return destinationsDTOS;
+
+    }
+
+    // --------------------------------------------------------------------------------------------------------
+
+
+    @Override
+    public List<UserReviewsDTO> findMyReviews(String email) {
+        var user = iUserRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Usuario incorrecto"));
+
+        List<UserReviews> reviews = iUserReviewsRepository.findAllById(userMapper.toDto(user).getReviews());
+        List<UserReviewsDTO> userReviewsDTOS = new ArrayList<>();
+        for (UserReviews userReviews : reviews) {
+            userReviewsDTOS.add(userReviewsMapper.toDto(userReviews));
+        }
+        return userReviewsDTOS;
+    }
+
+    @Override
+    public UserReviewsDTO createMyReview(String email, UserReviewsDTO dto) throws ResponseStatusException {
+        var user = iUserRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Usuario incorrecto"));
+
+        Destinations destinations = iDestinationsRepository.findById(dto.getDestination_id())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error no se encontró el Destino"));
+
+        UserReviews userReview = userReviewsMapper.toEntity(dto);
+        userReview.setDestination(destinations);
+        userReview.setCreationDate(Calendar.getInstance().getTime());
+        userReview.setName(user.getFirstname());
+        user.addReview(userReview);
+        iUserRepository.save(user);
+        return userReviewsMapper.toDto(userReview);
+    }
+
+    @Override
+    public void deleteMyReview(String email, Long id) throws ResponseStatusException {
+        var user = iUserRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Usuario incorrecto"));
+
+        UserReviews userReview = iUserReviewsRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error no se encontró la reseña"));
+
+        user.removeReview(userReview);
+        iUserRepository.save(user);
+    }
+
+    // --------------------------------------------------------------------------------------------------------
+
+    @Override
+    public List<FlightsDTO> myReservationsFlights(String email) throws ResponseStatusException{
+        var user = iUserRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario incorrecto"));
+
+        List<FlightsDTO> flightsDTOS = new ArrayList<>();
+        for (Reservations res : user.getReservations()) {
+            flightsDTOS.add(flightsMapper.toDto(res.getStartFlight()));
+            if (res.getReturnFlight() != null)
+                flightsDTOS.add(flightsMapper.toDto(res.getReturnFlight()));
+        }
+
+        return flightsDTOS;
 
     }
 }

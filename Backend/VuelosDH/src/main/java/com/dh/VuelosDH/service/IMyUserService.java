@@ -32,4 +32,11 @@ public interface IMyUserService {
     void deleteMyTicket(Long id, String email) throws ResponseStatusException;
 
     List<DestinationsDTO> findMyFavoritesDestinations(String email);
+
+    UserReviewsDTO createMyReview(String email, UserReviewsDTO dto) throws ResponseStatusException;
+    void deleteMyReview(String email, Long id) throws ResponseStatusException;
+
+    List<UserReviewsDTO> findMyReviews(String email);
+
+    List<FlightsDTO> myReservationsFlights(String email) throws ResponseStatusException;
 }

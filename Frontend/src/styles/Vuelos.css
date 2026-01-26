@@ -199,9 +199,9 @@
 }
 
 .pasajeros-row input {
-  font-size: 20px;
-  width: 60px;
-  text-align: center;
+    font-size: 20px;
+    width: 60px;
+    text-align: center;
 }
 
 .pasajeros-row span {
@@ -212,8 +212,86 @@
 }
 
 
-@media(max-width:900px) {
+@media (max-width: 900px) {
+
     .grid {
         gap: 10px 100px;
+    }
+
+    .destinoform {
+        width: 95%;
+        height: auto;
+        flex-direction: column;
+        border-radius: 30px;
+        padding: 20px 10px;
+        gap: 15px;
+    }
+
+    .destinoform div {
+        font-size: 18px;
+    }
+
+    .destinoform-selector {
+        width: 90%;
+        text-align: left;
+        padding: 10px 15px;
+        background-color: #eaf4f8;
+        border-radius: 15px;
+    }
+
+    .separador {
+        display: none;
+    }
+
+    .custom-select-options-origen,
+    .custom-select-options-destino {
+        position: static;
+        width: 100%;
+        max-height: 200px;
+        margin-top: 8px;
+        border-radius: 10px;
+    }
+
+    .vuelos-calendar {
+        position: static;
+        transform: scale(1);
+        clip-path: none;
+        box-shadow: none;
+        margin: 10px auto 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .pasajeros-calendar {
+        position: static;
+        margin-top: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .pasajeros-row span,
+    .pasajeros-row input {
+        font-size: 18px;
+    }
+
+    .buscar {
+        width: 100%;
+        margin: 10px 0 0 0;
+        font-size: 20px;
+        padding: 15px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .destino-title {
+        font-size: 32px;
+    }
+
+    .destino-subtitle {
+        font-size: 22px;
     }
 }

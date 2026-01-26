@@ -4,6 +4,7 @@ import { useContext, useState } from 'react'
 import { AuthContext } from '../context/Usuario/AuthProvider'
 import { UsuarioContext } from '../context/Usuario/UsuarioContext'
 import { AvatarPerfilComponent } from './AvatarPerfilComponent'
+import logo from "../assets/navbar/VuelosDH-icon.png"
 
 export const NavBarComponent = () => {
 
@@ -30,8 +31,8 @@ export const NavBarComponent = () => {
         <nav className="navbar">
 
             <div className="logo-area">
-                <NavLink to='/' className='logo myLink'>
-                    <img onClick={() => window.scrollTo(0, 0)} src="src/assets/navbar/VuelosDH-icon.png" alt="VuelosDH-icon" />
+                <NavLink to='/' className='logo myLink' onClick={() => window.scrollTo(0, 0)}>
+                    <img src={logo} alt="VuelosDH-icon" />
                 </NavLink>
                 <NavLink to='/' className='logo myLink'>
                     <span className="lema">Viajá más, viví mejor</span>
@@ -104,6 +105,7 @@ export const NavBarComponent = () => {
                 <ul>
                     <li><NavLink className="myLink" to='/'>Vuelos</NavLink></li>
                     <li><NavLink className="myLink" to='/destinos'>Destinos</NavLink></li>
+                    <li><NavLink className="myLink" to='/reservas'>Reservas</NavLink></li>
                     {user?.role === 'ROLE_ADMIN' &&
                         <li><NavLink className="myLink" to='/administracion'>Administración</NavLink></li>
                     }

@@ -13,6 +13,16 @@ public class UserReviewsMapper {
                 .destination_id(userReviews.getDestination().getId())
                 .review(userReviews.getReview())
                 .stars(userReviews.getStars())
+                .name(userReviews.getName())
+                .creationDate(userReviews.getCreationDate())
+                .build();
+    }
+
+    public UserReviews toEntity (UserReviewsDTO dto) {
+        return UserReviews.builder()
+                .review(dto.getReview())
+                .stars(dto.getStars())
+                .name(dto.getName())
                 .build();
     }
 }

@@ -34,4 +34,6 @@ public class UserDTO {
 
     private Set<Long> favorites;
 
+    private List<Long> reviews;
+
 }

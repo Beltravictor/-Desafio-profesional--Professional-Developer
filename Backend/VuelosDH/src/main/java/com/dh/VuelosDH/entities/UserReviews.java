@@ -3,6 +3,8 @@ package com.dh.VuelosDH.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "User_Reviews")
 @Getter
@@ -30,4 +32,10 @@ public class UserReviews {
 
     @Column(name = "stars")
     private Float stars;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "creation_date")
+    private Date creationDate;
 }

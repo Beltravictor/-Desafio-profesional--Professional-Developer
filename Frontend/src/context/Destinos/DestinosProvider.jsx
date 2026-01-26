@@ -105,6 +105,7 @@ export const DestinosProvider = ({ children }) => {
             const res = await fetch(`http://localhost:8081/destinos/${id}`)
             const data = await res.json()
             setDestinoPorID(data)
+            return data
         } catch (error) {
             console.error(error)
         }
@@ -140,7 +141,19 @@ export const DestinosProvider = ({ children }) => {
         } catch (error) {
             console.error(error)
         }
+    }
 
+    const [reviewsPorDestino, setReviwsPorDestino] = useState([])
+
+    const buscarReviewsPorDestino = async (id) => {
+        try {
+            const res = await fetch(`http://localhost:8081/reviews/destino/${id}`)
+            const data = await res.json()
+            setReviwsPorDestino(data)
+            return data
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
@@ -152,7 +165,8 @@ export const DestinosProvider = ({ children }) => {
             categoria, destinosCategorias,
             destinoPorID, buscarDestinoPorId,
             destinoPorNombre, buscarDestinoPorNombre,
-            destinosPorVuelo, buscarDestinosPorVuelo
+            destinosPorVuelo, buscarDestinosPorVuelo,
+            reviewsPorDestino, buscarReviewsPorDestino
         }}>
             {children}
         </DestinosContext>

@@ -88,6 +88,8 @@ export const DestinosPage = () => {
             ) : (
                 <PaginadoComponent destinos={filtrados} pagina={pagina} setPagina={setPagina} />
             )}
+
+            <div style={{ height: "20px" }} />
         </>
 
     )

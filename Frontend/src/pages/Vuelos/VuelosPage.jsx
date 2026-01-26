@@ -12,8 +12,8 @@ export const VuelosPage = () => {
     useEffect(() => {
         destinosRandoms(10)
     }, [])
-    
-    
+
+
     return (
         <>
             <div className='fondo'>
@@ -22,7 +22,7 @@ export const VuelosPage = () => {
             </div>
 
             <h1 className='title'>Elegí tu Nueva Aventura</h1>
-            <DestinoFormComponent/>
+            <DestinoFormComponent />
 
             <h2 className='subtitle'>Buscar por Categoría</h2>
             <CategoriasComponent />
@@ -35,7 +35,7 @@ export const VuelosPage = () => {
                     ))
                 }
             </div>
-
+            <div style={{ height: "50px" }} />
         </>
     )
 }

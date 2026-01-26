@@ -86,6 +86,16 @@ public class User implements UserDetails {
         passenger.setUser(null);
     }
 
+    public void addReview(UserReviews userReview) {
+        userReview.setUser(this);
+        reviews.add(userReview);
+    }
+
+    public void removeReview(UserReviews userReview) {
+        reviews.remove(userReview);
+        userReview.setUser(null);
+    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

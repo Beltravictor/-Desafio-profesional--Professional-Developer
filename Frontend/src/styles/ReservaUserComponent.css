@@ -1,6 +1,6 @@
 .reservation-card {
   display: flex;
-  width:  100%;
+  width: 800px;
   height: 250px;
   max-width: 900px;
   background: #ffffff;
@@ -81,6 +81,17 @@
 }
 
 .pay-button {
+  background-color: #1fc92b;
+  color: #ffffff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.review-button {
   background-color: #1a4fd8;
   color: #ffffff;
   border: none;
@@ -91,8 +102,27 @@
   transition: background-color 0.2s ease;
 }
 
+.cancelar-button {
+  background-color: #d81a1a;
+  color: #ffffff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
 .pay-button:hover {
+  background-color: #147c1b;
+}
+
+.review-button:hover {
   background-color: #163fae;
+}
+
+.cancelar-button:hover {
+  background-color: #941313;
 }
 
 .pay-button:disabled {

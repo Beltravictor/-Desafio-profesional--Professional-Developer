@@ -44,13 +44,13 @@ public class Flights {
     @Column(name = "available_seats")
     private Integer availableSeats;
 
-    @OneToMany(mappedBy = "startFlight")
+    @OneToMany(mappedBy = "startFlight", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reservations> startFlight;
 
-    @OneToMany(mappedBy = "returnFlight")
+    @OneToMany(mappedBy = "returnFlight", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Reservations> returnFlight;
 
-    @OneToMany(mappedBy = "flight")
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Tickets> tickets;
 
     public void addTicket(Tickets ticket) {

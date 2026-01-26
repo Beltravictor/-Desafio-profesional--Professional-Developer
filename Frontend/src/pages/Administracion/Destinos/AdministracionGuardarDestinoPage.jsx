@@ -25,7 +25,6 @@ export const AdministracionGuardarDestinoPage = () => {
     const [imagenes, setImagenes] = useState('')
     const [categoria, setCategoria] = useState([])
     const [caracteristica, setCaracteristica] = useState([])
-    const [rating, setRating] = useState('')
     const [descripcion, setDescripcion] = useState('')
 
     const [confirmacion, setConfirmacion] = useState(false)
@@ -47,7 +46,6 @@ export const AdministracionGuardarDestinoPage = () => {
         fetchCaracteristicas()
     }, [])
 
-
     useEffect(() => {
         if (nombre != '') {
             if (Object.keys(destinoPorNombre).length === 0) {
@@ -61,7 +59,7 @@ export const AdministracionGuardarDestinoPage = () => {
 
 
     const verificarCampos = () => {
-        if (nombre && precio && imagenes && categoria.length && caracteristica.length && rating && descripcion) {
+        if (nombre && precio && imagenes && categoria.length && caracteristica.length && descripcion) {
             buscarDestinoPorNombre(nombre)
         } else {
             setMensajeErrorDescripcion('Error: Complete todos los campos')
@@ -80,7 +78,6 @@ export const AdministracionGuardarDestinoPage = () => {
             images: arrayImagenes,
             categories: categoria,
             characteristics: caracteristica,
-            rating: rating,
             description: descripcion
         }
         setConfirmacion(true)
@@ -90,7 +87,6 @@ export const AdministracionGuardarDestinoPage = () => {
         setImagenes('')
         setCategoria([])
         setCaracteristica([])
-        setRating('')
         setDescripcion('')
     }
 
@@ -181,12 +177,6 @@ export const AdministracionGuardarDestinoPage = () => {
                         <label>Precio</label>
                         <input type="number" placeholder="Ingresa el Precio" value={precio}
                             onChange={(e) => setPrecio(e.target.value)} />
-                    </div>
-
-                    <div className="form-item">
-                        <label>Rating</label>
-                        <input type="number" placeholder="Ingresa el Rating" value={rating}
-                            onChange={(e) => setRating(e.target.value)} />
                     </div>
 
                     <div className="form-item form-descripcion">

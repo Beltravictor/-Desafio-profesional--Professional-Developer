@@ -28,7 +28,6 @@ export const AdministracionEditarDestinoPage = () => {
   const [imagenes, setImagenes] = useState('')
   const [categoria, setCategoria] = useState([])
   const [caracteristica, setCaracteristica] = useState([])
-  const [rating, setRating] = useState('')
   const [descripcion, setDescripcion] = useState('')
 
   const [confirmacion, setConfirmacion] = useState(false)
@@ -48,7 +47,6 @@ export const AdministracionEditarDestinoPage = () => {
       setImagenes(destinoPorID?.images?.join("\n") ?? "")
       setCategoria(destinoPorID?.categories ?? [])
       setCaracteristica(destinoPorID?.characteristics ?? [])
-      setRating(destinoPorID?.rating ?? "")
       setDescripcion(destinoPorID?.description ?? "")
     }
   }, [destinoPorID])
@@ -64,7 +62,7 @@ export const AdministracionEditarDestinoPage = () => {
   }
 
   const verificarCampos = () => {
-    if (nombre && precio && imagenes && categoria.length && rating && descripcion) {
+    if (nombre && precio && imagenes && categoria.length && descripcion) {
       editarDestino()
     } else {
       setMensajeErrorDescripcion('Error: Complete todos los campos')
@@ -83,7 +81,6 @@ export const AdministracionEditarDestinoPage = () => {
       images: arrayImagenes,
       categories: categoria,
       characteristics: caracteristica,
-      rating: rating,
       description: descripcion
     }
     setConfirmacion(true)
@@ -162,12 +159,6 @@ export const AdministracionEditarDestinoPage = () => {
             <label>Precio</label>
             <input type="number" placeholder="Ingresa el Precio" value={precio}
               onChange={(e) => setPrecio(e.target.value)} />
-          </div>
-
-          <div className="form-item">
-            <label>Rating</label>
-            <input type="number" placeholder="Ingresa el Rating" value={Number(rating)}
-              onChange={(e) => setRating(e.target.value)} />
           </div>
 
           <div className="form-carac form-item">

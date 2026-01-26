@@ -13,8 +13,8 @@ import { MyUserContext } from "../../context/MyUser/MyUserContext"
 
 export const ReservasPage = () => {
   const { user } = useContext(AuthContext)
-  const { getProfile } = useContext(UsuarioContext)
-  const { crearReserva } = useContext(MyUserContext)
+  const { profile, getProfile } = useContext(UsuarioContext)
+  const { crearReserva, misReservas, verMiReservas, } = useContext(MyUserContext)
   const navigate = useNavigate()
 
   const [openCalendar, setOpenCalendar] = useState(false)
@@ -33,6 +33,8 @@ export const ReservasPage = () => {
   const [errors, setErrors] = useState([])
   const [confirmacion, setConfirmacion] = useState(false)
   const [reservaOk, setReservaOk] = useState(false)
+  const [loadingVuelos, setLoadingVuelos] = useState(false)
+  const [errorVuelos, setErrorVuelos] = useState(false)
 
   const [pasajeros, setPasajeros] = useState(({
     economy: 0,
@@ -54,6 +56,12 @@ export const ReservasPage = () => {
   }, [user])
 
   useEffect(() => {
+    if (user && profile) {
+      verMiReservas(user.token)
+    }
+  }, [profile])
+
+  useEffect(() => {
     setOrigen(Number(params.get("origen")) || "0")
     setDestino(Number(params.get("destino")) || "0")
 
@@ -73,9 +81,22 @@ export const ReservasPage = () => {
   }, [])
 
   useEffect(() => {
-    if (origen && destino && origen != 0 && destino != 0)
+    if (origen && destino && origen != 0 && destino != 0) {
+      setLoadingVuelos(true)
       vuelosPorOrigenDestino(origen, destino)
+    }
   }, [origen, destino])
+
+  useEffect(() => {
+    if (!loadingVuelos) return
+    if (origen && destino && origen != 0 && destino != 0) {
+      if (vuelos.length === 0)
+        setErrorVuelos(true)
+      else
+        setErrorVuelos(false)
+      setLoadingVuelos(false)
+    }
+  }, [vuelos])
 
   const normalizeToYMD = (value) => {
     const d = new Date(value)
@@ -98,6 +119,44 @@ export const ReservasPage = () => {
       allowedDates.add(normalizeToYMD(vuelo.return_date))
     })
     return !allowedDates.has(normalizeToYMD(date))
+  }
+
+  const reservaDatesIda = (date) => {
+    const startFlightIds = misReservas.map(r => r.startFlight)
+
+    const misVuelos = vuelos.filter(v =>
+      startFlightIds.includes(v.id)
+    )
+
+    const allowedDates = new Set(
+      misVuelos.map(v => normalizeToYMD(v.departure_date))
+    )
+    const isMarked = allowedDates.has(normalizeToYMD(date))
+
+    return (
+      <span className={isMarked ? 'fecha-marcada' : ''}>
+        {date.getDate()}
+      </span>
+    )
+  }
+
+  const reservaDatesVuelta = (date) => {
+    const returnFlight = misReservas.map(r => r.returnFlight)
+
+    const misVuelos = vuelos.filter(v =>
+      returnFlight.includes(v.id)
+    )
+
+    const allowedDates = new Set(
+      misVuelos.map(v => normalizeToYMD(v.return_date))
+    )
+    const isMarked = allowedDates.has(normalizeToYMD(date))
+
+    return (
+      <span className={isMarked ? 'fecha-marcada' : ''}>
+        {date.getDate()}
+      </span>
+    )
   }
 
   const handlePasajerosChange = (type, value) => {
@@ -181,8 +240,8 @@ export const ReservasPage = () => {
     }
 
     crearReserva(user.token, reserva)
-
     setConfirmacion(false)
+    verMiReservas(user.token)
     setReservaOk(true)
   }
 
@@ -264,12 +323,14 @@ export const ReservasPage = () => {
                 onChange={setFechaIda}
                 minDate={new Date()}
                 disabledDay={disableAllExceptAllowedIda}
+                dayContentRenderer={reservaDatesIda}
               />
               <Calendar
                 date={fechaVuelta}
                 onChange={setFechaVuelta}
                 minDate={fechaIda}
                 disabledDay={disableAllExceptAllowedVuelta}
+                dayContentRenderer={reservaDatesVuelta}
               />
             </div>
             :
@@ -279,6 +340,7 @@ export const ReservasPage = () => {
                 onChange={setFechaIda}
                 minDate={new Date()}
                 disabledDay={disableAllExceptAllowedIda}
+                dayContentRenderer={reservaDatesIda}
               />
             </div>}
         </div>
@@ -333,6 +395,18 @@ export const ReservasPage = () => {
               <button className='edit-button' onClick={() => setReservaOk(false)}>Ok!</button>
               <button className='edit-button' onClick={() => navigate("/perfil")}>Ir al perfil</button>
 
+            </div>
+          </div>
+        </div>
+      }
+
+      {
+        errorVuelos &&
+        <div className="editar-form">
+          <div className="editar-container">
+            <h2 className="form-title">No se encontraron vuelos disponibles para su viaje</h2>
+            <div className="botones-editar">
+              <button className='edit-button' onClick={() => setErrorVuelos(false)}>Ok</button>
             </div>
           </div>
         </div>

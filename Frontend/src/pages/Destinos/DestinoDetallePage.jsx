@@ -12,14 +12,17 @@ import { CompartirComponent } from '../../components/CompartirComponent'
 import { Calendar } from 'react-date-range'
 import { VuelosContext } from '../../context/Vuelos/VuelosContext'
 import { PoliticasComponent } from '../../components/PoliticasComponent'
+import { ReviewsComponent } from '../../components/ReviewsComponent'
+import { MyUserContext } from '../../context/MyUser/MyUserContext'
 
 export const DestinoDetallePage = () => {
   const { id } = useParams()
 
-  const { destinos, fetchDestinos } = useContext(DestinosContext)
+  const { user } = useContext(AuthContext)
+  const { destinos, fetchDestinos, reviewsPorDestino, buscarReviewsPorDestino } = useContext(DestinosContext)
   const { categorias, fetchCategorias } = useContext(CategoriasContext)
   const { caracteristicas, fetchCaracteristicas } = useContext(CaracteristicasContext)
-  const { user } = useContext(AuthContext)
+  const { misReservas, verMiReservas, } = useContext(MyUserContext)
   const { profile, getProfile, addFavorite, removeFavorite } = useContext(UsuarioContext)
   const { vuelos, vuelosPorOrigenDestino } = useContext(VuelosContext)
 
@@ -28,18 +31,25 @@ export const DestinoDetallePage = () => {
   const [origen, setOrigen] = useState(0)
   const [fechaIda, setFechaIda] = useState(new Date())
   const [favError, setFavError] = useState(false)
-  
+
 
   useEffect(() => {
     fetchDestinos()
     fetchCaracteristicas()
     fetchCategorias()
+    buscarReviewsPorDestino(id)
   }, [])
 
   useEffect(() => {
     if (user)
       getProfile(user.token)
   }, [user])
+
+  useEffect(() => {
+    if (user && profile) {
+      verMiReservas(user.token)
+    }
+  }, [profile])
 
   useEffect(() => {
     if (Object.keys(profile).length !== 0) {
@@ -85,6 +95,33 @@ export const DestinoDetallePage = () => {
     return !allowedDates.has(normalizeToYMD(date))
   }
 
+  const reservaDatesIda = (date) => {
+    const startFlightIds = misReservas.map(r => r.startFlight)
+
+    const misVuelos = vuelos.filter(v =>
+      startFlightIds.includes(v.id)
+    )
+
+    const allowedDates = new Set(
+      misVuelos.map(v => normalizeToYMD(v.departure_date))
+    )
+    const isMarked = allowedDates.has(normalizeToYMD(date))
+
+    return (
+      <span className={isMarked ? 'fecha-marcada' : ''}>
+        {date.getDate()}
+      </span>
+    )
+  }
+
+  const promedioRating = () => {
+    if (reviewsPorDestino.length == 0)
+      return null
+    const ratings = reviewsPorDestino.map(review => review.stars)
+    const suma = ratings.reduce((acum, review) => acum + review)
+    return suma / (reviewsPorDestino.length)
+  }
+
 
   if (destinos.length == 0 || categorias.length == 0 || !destinos.find(des => des.id == id)) {
     return <div className="form-info form-item">
@@ -102,7 +139,7 @@ export const DestinoDetallePage = () => {
           <div className="destination-left">
             <div className="price-box">
               <span className="label">Precio desde Buenos Aires</span>
-              <span className="price"><br />${Number(destinos.find(des => des.id == id).sample_price).toLocaleString('es-AR')}</span>
+              <span className="price"><br />${Number(destinos.find(des => des.id == id).sample_price)?.toLocaleString('es-AR')}</span>
             </div>
 
             <p className="description">
@@ -149,17 +186,19 @@ export const DestinoDetallePage = () => {
               </button>
             </div>
             {favError &&
-            <span className="form-error">Inicie sesión para agregar el destino a favoritos</span>}
+              <span className="form-error">Inicie sesión para agregar el destino a favoritos</span>}
           </div>
 
           <div className="destination-right">
             <div className="title-row">
               <h1>{destinos.find(des => des.id == id).name ? destinos.find(des => des.id == id).name : ""}</h1>
               <div className="rating">
-                ⭐ <span>{destinos.find(des => des.id == id).rating}</span>
+                ⭐ <span>{promedioRating()?.toFixed(2)}</span>
               </div>
             </div>
-
+            <div className="form-info form-item">
+              <label>Seleccione un Origen para ver su disponibilidad </label>
+            </div>
             <div >
               <select value={origen} onChange={e => setOrigen(Number(e.target.value))}>
                 <option value="">Seleccione el Origen</option>
@@ -177,6 +216,7 @@ export const DestinoDetallePage = () => {
                   onChange={setFechaIda}
                   minDate={new Date()}
                   disabledDay={disableAllExceptAllowedIda}
+                  dayContentRenderer={reservaDatesIda}
                 />
               </div>
             </div>
@@ -207,7 +247,13 @@ export const DestinoDetallePage = () => {
           ))}
         </div>
 
-        <PoliticasComponent politicas={destinos.find(des => des.id == id).policies}/>
+        <div className="form-info form-item">
+          <label>Reseñas totales: {reviewsPorDestino.length} </label>
+        </div>
+
+        <ReviewsComponent reviews={[...reviewsPorDestino].reverse()} />
+
+        <PoliticasComponent politicas={destinos.find(des => des.id == id).policies} />
 
         {compartir &&
           <CompartirComponent destino={destinos.find(des => des.id == id)} url={"http://localhost:5173/destinoinfo/"} id={id} setCompartir={setCompartir} />

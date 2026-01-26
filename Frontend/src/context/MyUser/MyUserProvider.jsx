@@ -15,7 +15,6 @@ export const MyUserProvider = ({ children }) => {
                 },
                 body: JSON.stringify(reserva)
             })
-            console.log(res)
         } catch (error) {
             console.log(error)
         }
@@ -70,7 +69,7 @@ export const MyUserProvider = ({ children }) => {
         }
     }
 
-    const eliminarMiReservaPorId = async (id, token) => {
+    const eliminarMiReservaPorId = async (token, id) => {
         try {
             const res = await fetch(`${address}/reserva/${id}`, {
                 method: "DELETE",
@@ -257,6 +256,52 @@ export const MyUserProvider = ({ children }) => {
         }
     }
 
+
+    const [misReviews, setMisReviews] = useState([])
+
+    const getMisReviews = async (token) => {
+        try {
+            const res = await fetch(`${address}/review`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            const data = await res.json()
+            setMisReviews(data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const crearReview = async (token, review) => {
+        try {
+            const res = await fetch(`${address}/review`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(review)
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const eliminarMiReviewPorId = async (token, id) => {
+        try {
+            const res = await fetch(`${address}/review/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <MyUserContext value={{
             crearReserva,
@@ -280,7 +325,11 @@ export const MyUserProvider = ({ children }) => {
             actualizarMiTicket,
             eliminarMiTicketPorId,
             destinosFavoritos,
-            getDestinosFavoritos
+            getDestinosFavoritos,
+            misReviews,
+            getMisReviews,
+            crearReview,
+            eliminarMiReviewPorId
         }}>
             {children}
         </MyUserContext>
