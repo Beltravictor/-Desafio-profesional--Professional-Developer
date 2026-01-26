@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
-export const CompartirComponent = ({ destino, url, id, setCompartir }) => {
+export const CompartirComponent = ({ destino, url, setCompartir }) => {
   const [message, setMessage] = useState(
     `Estoy viendo este destino ${destino.name} y es espectacular ✈️🌍\nReserva tu viaje en ${url}`
   )
@@ -87,6 +87,10 @@ export const CompartirComponent = ({ destino, url, id, setCompartir }) => {
         />
 
         <div className="char-counter">{message.length}/280</div>
+
+        <div className="compartir-imagen">
+          <img src={destino.images[0]} alt={destino.name} />
+        </div>
 
         <div className="network-grid">
           <Network

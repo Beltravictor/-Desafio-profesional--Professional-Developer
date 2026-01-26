@@ -325,6 +325,20 @@
   color: #fff;
 }
 
+.compartir-imagen {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.compartir-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 @media (max-width: 900px) {
   .gallery-container-ver-mas {
     grid-template-columns: 1fr;
