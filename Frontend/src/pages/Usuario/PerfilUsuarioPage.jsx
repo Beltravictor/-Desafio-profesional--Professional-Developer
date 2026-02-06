@@ -1,39 +1,53 @@
 import { useContext, useEffect, useState } from 'react'
-import { AuthContext } from '../../context/Usuario/AuthProvider'
-import '../../styles/PerfilUsuarioPage.css'
-import { UsuarioContext } from '../../context/Usuario/UsuarioContext'
 import { NavLink } from 'react-router-dom'
-import { AvatarPerfilComponent } from '../../components/AvatarPerfilComponent'
+
+import { AuthContext } from '../../context/Usuario/AuthProvider'
+import { UsuarioContext } from '../../context/Usuario/UsuarioContext'
 import { MyUserContext } from '../../context/MyUser/MyUserContext'
+
+import { AvatarPerfilComponent } from '../../components/AvatarPerfilComponent'
 import { DestinoFavoritoComponent } from '../../components/DestinoFavoritoComponent'
 import { ReservaUserComponent } from '../../components/ReservaUserComponent'
 import { MisReviewsComponent } from '../../components/MisReviewsComponent'
 
-export const PerfilUsuarioPage = () => {
+import '../../styles/PerfilUsuarioPage.css'
 
+const EmptyState = ({ text }) => (
+    <div className="empty-state">
+        <p>{text}</p>
+    </div>
+)
+
+export const PerfilUsuarioPage = () => {
     const { user, logout } = useContext(AuthContext)
-    const { misReservas,
+
+    const {
+        misReservas,
         verMiReservas,
         eliminarMiReservaPorId,
-        misPasajeros,
-        verMipasajeros,
-        misTickets,
-        verMiTickets,
         destinosFavoritos,
         getDestinosFavoritos,
         misReviews,
         getMisReviews,
-        eliminarMiReviewPorId } = useContext(MyUserContext)
-    const { profile, setProfile, getProfile, setToken, eliminarMiUsuario, addFavorite, removeFavorite } = useContext(UsuarioContext)
+        eliminarMiReviewPorId
+    } = useContext(MyUserContext)
+
+    const {
+        profile,
+        setProfile,
+        getProfile,
+        setToken,
+        eliminarMiUsuario,
+        addFavorite,
+        removeFavorite
+    } = useContext(UsuarioContext)
+
     const [confirmacionBorrar, setConfirmacionBorrar] = useState(false)
-    const [seccionFavoritos, setSeccionFavoritos] = useState(false)
-    const [seccionReservas, setSeccionReservas] = useState(false)
-    const [seccionReviews, setSeccionReviews] = useState(false)
+    const [activeSection, setActiveSection] = useState('favoritos')
+
 
     useEffect(() => {
-        if (user) {
-            getProfile(user.token)
-        }
+        if (user) getProfile(user.token)
     }, [user])
 
     useEffect(() => {
@@ -43,6 +57,7 @@ export const PerfilUsuarioPage = () => {
             getMisReviews(user.token)
         }
     }, [profile])
+
 
     const cerrarSesion = () => {
         logout()
@@ -60,12 +75,12 @@ export const PerfilUsuarioPage = () => {
         await verMiReservas(user.token)
     }
 
-    const actualizarReviews = async () => {
+    const borrarReview = async (id) => {
+        await eliminarMiReviewPorId(user.token, id)
         await getMisReviews(user.token)
     }
 
-    const borrarReview = async (id) => {
-        await eliminarMiReviewPorId(user.token, id)
+    const actualizarReviews = async () => {
         await getMisReviews(user.token)
     }
 
@@ -74,119 +89,130 @@ export const PerfilUsuarioPage = () => {
         return (
             <div className="profile-container">
                 <div className="profile-card">
-                    <h2 className="profile-name">Para ver tu Perfil Inicia Sesión</h2>
-                    <NavLink className="myLink" to='/login'>
-                        <button className="edit-button">Iniciar Sesión</button>
+                    <h2>Para ver tu perfil iniciá sesión</h2>
+
+                    <NavLink to="/login" className="myLink">
+                        <button className="edit-button">Iniciar sesión</button>
                     </NavLink>
-                    <NavLink className="myLink" to='/registro'>
-                        <button className="edit-button">¿Todavía no tenes una cuenta? Registrate!</button>
+
+                    <NavLink to="/registro" className="myLink">
+                        <button className="edit-button">Crear cuenta</button>
                     </NavLink>
                 </div>
             </div>
         )
     }
-
 
     if (!profile || Object.keys(profile).length === 0) {
         return (
             <div className="profile-container">
-                <h2 className="profile-name">Cargando Perfil...</h2>
+                <h2>Cargando perfil...</h2>
             </div>
         )
     }
 
 
-
     return (
         <div className="profile-container">
-            {
-                confirmacionBorrar &&
+
+            {confirmacionBorrar && (
                 <div className="adm-editar-form">
                     <div className="adm-editar-container">
-                        <h2 className="adm-form-title">¿Seguro que quiere eliminar su Cuenta?</h2>
+                        <h2>¿Seguro que querés eliminar tu cuenta?</h2>
                         <div className="adm-botones-editar">
-                            <NavLink to='/' className='logo myLink'>
-                                <button className="adm-form-btn" type="button" onClick={() => eliminarCuenta()}>Eliminar</button>
-                            </NavLink>
-                            <button className="adm-form-btn" type="button" onClick={() => setConfirmacionBorrar(false)}>Cancelar</button>
+                            <button className="adm-form-btn" onClick={eliminarCuenta}>
+                                Eliminar
+                            </button>
+                            <button
+                                className="adm-form-btn"
+                                onClick={() => setConfirmacionBorrar(false)}
+                            >
+                                Cancelar
+                            </button>
                         </div>
                     </div>
                 </div>
-            }
+            )}
+
             <div className="profile-card">
                 <AvatarPerfilComponent className="profile-avatar" />
                 <h2 className="profile-name">{profile.firstname} {profile.lastname}</h2>
                 <p className="profile-email">{profile.email}</p>
-
                 <div className="profile-info">
                     <h3>Información</h3>
                     <p><strong>País:</strong> Argentina</p>
                     <p><strong>Miembro desde: </strong>{profile.creationDate ? profile.creationDate.slice(0, 10) : 'admin'}</p>
                     <p><strong>Rol: </strong>{profile?.role.slice(5)}</p>
                 </div>
-
                 <NavLink to='/' className='logo myLink'>
                     <button className='edit-button' onClick={() => cerrarSesion()}>Cerrar Sesión</button>
-                </NavLink>
-                <button className='delete-button' onClick={() => setConfirmacionBorrar(true)}>Eliminar Cuenta</button>
+                </NavLink> <button className='delete-button' onClick={() => setConfirmacionBorrar(true)}>Eliminar Cuenta</button>
             </div>
 
-            <button
-                className={`favoritos-toggle ${seccionFavoritos ? "open" : ""}`}
-                onClick={() => setSeccionFavoritos(!seccionFavoritos)}
-                aria-expanded={seccionFavoritos}
-            >
-                <span className="toggle-text">
-                    {seccionFavoritos ? "Ocultar favoritos" : "Mostrar favoritos"}
-                </span>
+            <div className="profile-tabs">
+                {['favoritos', 'reservas', 'reviews', 'tickets'].map(tab => (
+                    <button
+                        key={tab}
+                        className={`tab-btn ${activeSection === tab ? 'active' : ''}`}
+                        onClick={() => setActiveSection(tab)}
+                    >
+                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                    </button>
+                ))}
+            </div>
 
-                <span className="toggle-icon" />
-            </button>
-            {seccionFavoritos &&
-                <div className='favs-container'>
-                    {destinosFavoritos.map((destino) => (
-                        <DestinoFavoritoComponent key={destino.id} destino={destino} addFavorite={addFavorite} removeFavorite={removeFavorite} token={user.token} />
-                    ))}
-                </div>
-            }
+            <div className="profile-section-content">
 
-            <button
-                className={`favoritos-toggle ${seccionReservas ? "open" : ""}`}
-                onClick={() => setSeccionReservas(!seccionReservas)}
-                aria-expanded={seccionReservas}
-            >
-                <span className="toggle-text">
-                    {seccionReservas ? "Ocultar reservas" : "Mostrar reservas"}
-                </span>
+                {activeSection === 'favoritos' && (
+                    destinosFavoritos.length ? (
+                        <div className="favs-container">
+                            {destinosFavoritos.map(destino => (
+                                <DestinoFavoritoComponent
+                                    key={destino.id}
+                                    destino={destino}
+                                    addFavorite={addFavorite}
+                                    removeFavorite={removeFavorite}
+                                    token={user.token}
+                                />
+                            ))}
+                        </div>
+                    ) : <EmptyState text="No tenés destinos favoritos aún" />
+                )}
 
-                <span className="toggle-icon" />
-            </button>
-            {seccionReservas &&
-                <div className='favs-container'>
-                    {misReservas.map((reserva) => (
-                        <ReservaUserComponent key={reserva.id} reserva={reserva} actualizarReviews={actualizarReviews} cancelarReserva={cancelarReserva} />
-                    ))}
-                </div>
-            }
+                {activeSection === 'reservas' && (
+                    misReservas.length ? (
+                        <div className="favs-container">
+                            {misReservas.map(reserva => (
+                                <ReservaUserComponent
+                                    key={reserva.id}
+                                    reserva={reserva}
+                                    actualizarReviews={actualizarReviews}
+                                    cancelarReserva={cancelarReserva}
+                                />
+                            ))}
+                        </div>
+                    ) : <EmptyState text="No tenés reservas realizadas" />
+                )}
 
-            <button
-                className={`favoritos-toggle ${seccionReviews ? "open" : ""}`}
-                onClick={() => setSeccionReviews(!seccionReviews)}
-                aria-expanded={seccionReviews}
-            >
-                <span className="toggle-text">
-                    {seccionReviews ? "Ocultar reseñas" : "Mostrar reseñas"}
-                </span>
+                {activeSection === 'reviews' && (
+                    misReviews?.length ? (
+                        <div className="favs-container">
+                            {misReviews.map(review => (
+                                <MisReviewsComponent
+                                    key={review.id}
+                                    review={review}
+                                    eliminarReview={borrarReview}
+                                />
+                            ))}
+                        </div>
+                    ) : <EmptyState text="Todavía no escribiste reseñas" />
+                )}
 
-                <span className="toggle-icon" />
-            </button>
-            {seccionReviews &&
-                <div className='favs-container'>
-                    {misReviews?.map((review) => (
-                        <MisReviewsComponent key={review.id} review={review} eliminarReview={borrarReview} />
-                    ))}
-                </div>
-            }
+                {activeSection === 'tickets' && (
+                    <EmptyState text="Próximamente vas a poder gestionar tus tickets 🎫" />
+                )}
+
+            </div>
         </div>
     )
 }

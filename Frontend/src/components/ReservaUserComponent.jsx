@@ -3,22 +3,23 @@ import { DestinosContext } from "../context/Destinos/DestinosContext"
 import '../styles/ReservaUserComponent.css'
 import { CrearReviewComponent } from "./CrearReviewComponent"
 import { NavLink } from "react-router-dom"
+import { format } from "date-fns"
 
 export const ReservaUserComponent = ({ reserva, actualizarReviews, cancelarReserva }) => {
 
     const { buscarDestinosPorVuelo } = useContext(DestinosContext)
-    const [misVuelos, setMisVuelos] = useState([])
+    const [misDestinos, setMisDestinos] = useState([])
     const [openCrearReview, setOpenCrearReview] = useState(false)
     const [openCancelarReview, setOpenCacenlarReview] = useState(false)
 
     useEffect(() => {
         const cargarDestinos = async () => {
-            setMisVuelos(await buscarDestinosPorVuelo(reserva.startFlight))
+            setMisDestinos(await buscarDestinosPorVuelo(reserva.startFlight))
         }
         cargarDestinos()
     }, [reserva.startFlight])
 
-    if (!reserva || !misVuelos || misVuelos.length === 0) {
+    if (!reserva || !misDestinos || misDestinos.length === 0) {
         return (
             <div className="reservation-card">
                 <div className="reservation-header">
@@ -32,21 +33,26 @@ export const ReservaUserComponent = ({ reserva, actualizarReviews, cancelarReser
         <div className="reservation-card">
 
             <div className="reservation-image">
-                <NavLink to={`/destinoinfo/${misVuelos[1].id}`} className='logo myLink'>
-                    <img src={misVuelos[1].images[0]} alt={misVuelos[1].name} />
+                <NavLink to={`/destinoinfo/${misDestinos[1].id}`} className='logo myLink'>
+                    <img src={misDestinos[1].images[0]} alt={misDestinos[1].name} />
                 </NavLink>
             </div>
 
             <div className="reservation-content">
                 <div>
                     <div className="reservation-header">
-                        <h3>{misVuelos[0].name} → {misVuelos[1].name}</h3>
+                        <h3>{misDestinos[0].name} → {misDestinos[1].name}</h3>
                         <span className={`status ${reserva.reservationStatus.toLowerCase()}`}>
                             {reserva.reservationStatus}
                         </span>
                     </div>
 
-                    <p className="flight-type">{reserva.returnFlight ? "Ida y Vuelta" : "Solo Ida"}</p>
+                    <p className="flight-type">{reserva.returnFlight ? `Ida y Vuelta` : `Solo Ida`}</p>
+
+                    <p className="flight-type">{reserva.returnFlight ? `${format(reserva.departure_date, "dd/MM/yyyy")} → ${format(
+                        reserva.return_date,
+                        "dd/MM/yyyy"
+                    )}` : `${format(reserva.departure_date, "dd/MM/yyyy")}`}</p>
 
                     <div className="reservation-details">
                         <span>Económica: <strong>{reserva.economyClass}</strong></span>
@@ -89,7 +95,7 @@ export const ReservaUserComponent = ({ reserva, actualizarReviews, cancelarReser
                         openCancelarReview &&
                         <div className="editar-form">
                             <div className="editar-container">
-                                <h2 className="form-title">{`¿Seguro que quiere cancelar su reservar un vuelo de ${misVuelos[0].name} a ${misVuelos[1].name}?`}</h2>
+                                <h2 className="form-title">{`¿Seguro que quiere cancelar su reservar un vuelo de ${misDestinos[0].name} a ${misDestinos[1].name}?`}</h2>
                                 <div className="botones-editar">
                                     <button className='edit-button' onClick={() => setOpenCacenlarReview(false)}>Mantener Reserva</button>
                                     <button className='delete-button' onClick={() => cancelarReserva(reserva.id)}>Cancelar</button>
@@ -99,7 +105,7 @@ export const ReservaUserComponent = ({ reserva, actualizarReviews, cancelarReser
                     }
 
                     {openCrearReview &&
-                        <CrearReviewComponent onClose={setOpenCrearReview} destination_id={misVuelos[1].id} actualizarReviews={actualizarReviews} />}
+                        <CrearReviewComponent onClose={setOpenCrearReview} destination_id={misDestinos[1].id} actualizarReviews={actualizarReviews} />}
                 </div>
             </div>
         </div>

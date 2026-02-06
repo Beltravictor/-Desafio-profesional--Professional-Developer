@@ -4,11 +4,14 @@ import com.dh.VuelosDH.dto.*;
 import com.dh.VuelosDH.entities.*;
 import com.dh.VuelosDH.mapper.*;
 import com.dh.VuelosDH.repository.*;
+import com.dh.VuelosDH.service.EmailService;
 import com.dh.VuelosDH.service.IMyUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,11 +26,13 @@ import java.util.Objects;
 public class IMyUserServiceImpl implements IMyUserService {
 
     private final IDestinationsRepository iDestinationsRepository;
+    private final IReservationsRepository iReservationsRepository;
     private final IPassengersRepository iPassengersRepository;
     private final IUserRepository iUserRepository;
     private final ITicketsRepository iTicketsRepository;
     private final IFlightsRepository iFlightsRepository;
     private final IUserReviewsRepository iUserReviewsRepository;
+    private final EmailService emailService;
 
     private final ReservationsMapper reservationsMapper;
     private final PassengersMapper passengersMapper;
@@ -104,14 +109,17 @@ public class IMyUserServiceImpl implements IMyUserService {
         res.setReservationStatus(Status.CREATED);
         user.addReservation(res);
         startFlight.addStartFlight(res);
+
         if (dto.getReturnFlight() != null) {
             Flights returnFlight = iFlightsRepository.findById(dto.getReturnFlight())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Error no se encontró el vuelo de vuelta"));
             returnFlight.addReturnFlight(res);
         }
-        iUserRepository.save(user);
+        Reservations savedRes = iReservationsRepository.save(res);
 
-        return reservationsMapper.toDto(res);
+        emailService.sendReservationEmail(email, savedRes);
+
+        return reservationsMapper.toDto(savedRes);
     }
 
     @Override

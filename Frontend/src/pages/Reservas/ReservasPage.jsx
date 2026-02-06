@@ -17,7 +17,6 @@ export const ReservasPage = () => {
   const { crearReserva, misReservas, verMiReservas, } = useContext(MyUserContext)
   const navigate = useNavigate()
 
-  const [openCalendar, setOpenCalendar] = useState(false)
   const [params] = useSearchParams()
 
   const { destinos, fetchDestinos } = useContext(DestinosContext)
@@ -235,6 +234,8 @@ export const ReservasPage = () => {
       businessClass: pasajeros.business,
       firstClass: pasajeros.first,
       totalPrice: 1000,
+      departure_date: fechaIda,
+      return_date: toggleIdaVuelta ? fechaVuelta : null,
       startFlight: vueloIda.id,
       returnFlight: toggleIdaVuelta ? vueloVuelta.id : null
     }
@@ -307,13 +308,13 @@ export const ReservasPage = () => {
             </button>
           </div>
           {toggleIdaVuelta ?
-            <div className="date-input" onClick={() => setOpenCalendar(!openCalendar)}>
+            <div className="date-input">
               {`${format(fechaIda, "dd/MM/yyyy")} → ${format(
                 fechaVuelta,
                 "dd/MM/yyyy"
               )}`}
             </div> :
-            <div className="date-input" onClick={() => setOpenCalendar(!openCalendar)}>
+            <div className="date-input">
               {`${format(fechaIda, "dd/MM/yyyy")}`}
             </div>}
           {toggleIdaVuelta ?
@@ -368,8 +369,45 @@ export const ReservasPage = () => {
             ))}
           </div>
         )}
+        {user && profile ?
+          <>
+            <div className="calendar-grid">
+              <section className="user-details-card">
+                <h2 className="user-details-title">Datos del usuario</h2>
 
-        <button type="submit" className="search-button" >Reservar vuelo</button>
+                <div className="user-details-row">
+                  <span className="label">Nombre completo</span>
+                  <span className="value">{profile.firstname}  {profile.lastname}</span>
+                </div>
+
+                <div className="user-details-row">
+                  <span className="label">Email</span>
+                  <span className="value">{profile.email}</span>
+                </div>
+
+                <div className="user-details-row">
+                  <span className="label">Miembro desde</span>
+                  <span className="value">
+                    {new Date(profile.creationDate).toLocaleDateString("es-AR")}
+                  </span>
+                </div>
+
+                <div className="user-details-row">
+                  <span className="label">Reservas Totales</span>
+                  <span className="value">{misReservas.length}</span>
+                </div>
+              </section>
+
+            </div>
+
+
+            <button type="submit" className="search-button" >Reservar vuelo</button>
+          </>
+          :
+          <button className="search-button" onClick={() => navigate("/login?error=reserva")}>Inicie Sesión para realizar una reserva</button>
+        }
+
+
       </form>
 
       {

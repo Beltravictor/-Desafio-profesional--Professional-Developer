@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useSearchParams } from 'react-router-dom'
 import { UsuarioContext } from '../../context/Usuario/UsuarioContext'
 import { AuthContext } from '../../context/Usuario/AuthProvider'
 import { jwtDecode } from 'jwt-decode'
@@ -8,6 +8,8 @@ export const IniciarSesionUsuarioPage = () => {
     const { token, setToken, iniciarSesionUsuario } = useContext(UsuarioContext)
     const { login } = useContext(AuthContext)
 
+    const [params] = useSearchParams()
+
     const navigate = useNavigate()
 
     const [email, setEmail] = useState('')
@@ -15,6 +17,7 @@ export const IniciarSesionUsuarioPage = () => {
 
     const [errors, setErrors] = useState({})
     const [usuarioError, setUsuarioError] = useState(false)
+    const [errorTopMessage, setErrorTopMessage] = useState('')
     const [usuarioErrorMensaje, setUsuarioErrorMensaje] = useState('')
 
     useEffect(() => {
@@ -36,6 +39,18 @@ export const IniciarSesionUsuarioPage = () => {
             }
         }
     }, [token])
+
+    useEffect(() => {
+        switch (params.get("error")) {
+            case 'reserva':
+                setErrorTopMessage('Iniciá sesión o registrate para continuar con tu reserva')
+                break;
+
+            default:
+                setErrorTopMessage('')
+                break;
+        }
+    }, [])
 
     const validateForm = () => {
         const newErrors = {}
@@ -60,6 +75,7 @@ export const IniciarSesionUsuarioPage = () => {
         e.preventDefault()
         setUsuarioError(false)
         setUsuarioErrorMensaje('')
+        setErrorTopMessage('')
 
         if (!validateForm()) return
 
@@ -74,6 +90,12 @@ export const IniciarSesionUsuarioPage = () => {
     return (
         <div className="register-container">
             <form className="register-form" onSubmit={handleSubmit} noValidate>
+            {errorTopMessage && (
+                <span className="form-error">
+                    {errorTopMessage}
+                </span>
+            )}
+
                 <h2>Iniciar Sesión</h2>
 
                 {usuarioError && (

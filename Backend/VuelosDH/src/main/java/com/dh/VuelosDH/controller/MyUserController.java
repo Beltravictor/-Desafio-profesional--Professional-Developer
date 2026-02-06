@@ -1,7 +1,6 @@
 package com.dh.VuelosDH.controller;
 
 import com.dh.VuelosDH.dto.*;
-import com.dh.VuelosDH.entities.UserReviews;
 import com.dh.VuelosDH.service.IMyUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

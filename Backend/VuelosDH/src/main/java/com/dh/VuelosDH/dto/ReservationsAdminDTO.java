@@ -1,13 +1,9 @@
 package com.dh.VuelosDH.dto;
 
 import com.dh.VuelosDH.entities.Status;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +38,13 @@ public class ReservationsAdminDTO {
     @NotNull(message = "La fecha de creación es obligatoria")
     @PastOrPresent(message = "La fecha de creación no puede ser futura")
     private Date creationDate;
+
+    @NotNull(message = "La fecha de salida es obligatoria")
+    @FutureOrPresent(message = "La fecha de salida no puede ser pasada")
+    private Date departure_date;
+
+    @FutureOrPresent(message = "La fecha de regreso no puede ser pasada")
+    private Date return_date;
 
     @NotNull(message = "El vuelo de ida es obligatorio")
     @Positive(message = "El id del vuelo de ida debe ser positivo")

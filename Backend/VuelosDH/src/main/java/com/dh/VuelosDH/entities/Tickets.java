@@ -44,5 +44,4 @@ public class Tickets {
     @ManyToOne
     @JoinColumn(name = "passengers_id")
     private Passengers passengers;
-
 }

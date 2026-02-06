@@ -28,6 +28,7 @@ import { AdministracionGuardarCaracteristicasPage } from "./pages/Administracion
 import { MyUserProvider } from "./context/MyUser/MyUserProvider"
 import { ReservasPage } from "./pages/Reservas/ReservasPage"
 import { VuelosProvider } from "./context/Vuelos/VuelosProvider"
+import { WhatsappComponent } from "./components/WhatsappComponent"
 
 
 export const VuelosApp = () => {
@@ -67,6 +68,7 @@ export const VuelosApp = () => {
                     <Route path="/perfil" element={<PerfilUsuarioPage />} />
                     <Route path="/*" element={<VuelosPage />} />
                   </Routes>
+                  <WhatsappComponent/>
                   <FooterComponent />
                 </CaracteristicasProvider>
               </CategoriasProvider>

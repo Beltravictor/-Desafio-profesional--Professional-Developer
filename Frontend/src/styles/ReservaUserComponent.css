@@ -1,7 +1,7 @@
 .reservation-card {
   display: flex;
   width: 800px;
-  height: 250px;
+  min-height: 250px;
   max-width: 900px;
   background: #ffffff;
   border-radius: 12px;

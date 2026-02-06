@@ -21,8 +21,7 @@ public class Reservations {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "reservation_status")
-    @Builder.Default
-    private Status reservationStatus = Status.CREATED;
+    private Status reservationStatus;
 
     @Column(name = "economy_class")
     private Integer economyClass;
@@ -45,6 +44,12 @@ public class Reservations {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "departure_date")
+    private Date departure_date;
+
+    @Column(name = "return_date")
+    private Date return_date;
 
     @ManyToOne
     @JoinColumn(name = "start_flight_id")

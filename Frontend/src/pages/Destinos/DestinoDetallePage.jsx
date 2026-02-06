@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { DestinosContext } from '../../context/Destinos/DestinosContext'
 import { CategoriasContext } from '../../context/Categorias/CategoriasContext'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { HeaderComponent } from '../../components/HeaderComponent'
 import { DestinoImagenesComponent } from '../../components/DestinoImagenesComponent'
 import { CaracteristicasContext } from '../../context/Caracteristicas/CaracteristicasContext'
@@ -17,6 +17,7 @@ import { MyUserContext } from '../../context/MyUser/MyUserContext'
 
 export const DestinoDetallePage = () => {
   const { id } = useParams()
+  const navigate = useNavigate()
 
   const { user } = useContext(AuthContext)
   const { destinos, fetchDestinos, reviewsPorDestino, buscarReviewsPorDestino } = useContext(DestinosContext)
@@ -62,7 +63,7 @@ export const DestinoDetallePage = () => {
   }, [profile])
 
   useEffect(() => {
-    if (origen)
+    if (origen && origen != 0)
       vuelosPorOrigenDestino(origen, id)
   }, [origen])
 
@@ -221,13 +222,10 @@ export const DestinoDetallePage = () => {
               </div>
             </div>
 
-
-            <NavLink
-              to={`/reservas?destino=${id}&origen=${origen}&ida=${fechaIda}`}>
-              <button className="action-button">
-                Reservar mi vuelo
-              </button>
-            </NavLink>
+            <button className="action-button"
+              onClick={() => user ? navigate(`/reservas?destino=${id}&origen=${origen}&ida=${fechaIda}`) : navigate("/login?error=reserva")}>
+              Reservar mi vuelo
+            </button>
 
           </div>
         </div>
