@@ -1,18 +1,25 @@
 # ✈️ VuelosDH - Viajá más, viví mejor
 
-VuelosDH es una plataforma de reserva de vuelos es versión temprana, donde por el momento se puede explorar por los diferentes destinos, ver en detalles sus características, registrarse, iniciar sesión, administrar sus componentes.
+VuelosDH es una plataforma de reserva de vuelos a destinos turísticos. Permite a los usuarios registrarse, explorar nuestros destinos, hacer reservas y deja favoritos. Los administradores pueden gestionar los destinos, categorías y usuarios.
 
 ---
 
-## 🗄 Backend
-El backend está desarrollado en **Java + Spring Boot**
-Spring crea las tablas automáticamente y ejecuta data.sql creando contenido ejemplo para el repositorio.
-Es necesario el plugin de Lombok para la creación de Getters, Setters y Constructores.
-Se encuentra registrada la cuenta, email: admin@admin.com, passwod": adminA1!, que cuenta con rol de ADMIN.
+## ⚙️ Tecnologías
 
-## 🏗 Frontend
-El frontend está desarrollado en **React**.
-Dentro del proyecto se encuentran diferentes atajos para facilitar el testeo de componentes.
+### 🗄 Backend
+- Java 17
+- Spring Boot 3.2.x
+- Spring Security + JWT
+- Spring Data JPA
+- MySQL
+- Spring crea las tablas automáticamente y ejecuta data.sql creando contenido ejemplo para el repositorio.
+- Es necesario el plugin de Lombok para la creación de Getters, Setters y Constructores.
+- Se encuentra registrada la cuenta, email: admin@admin.com, passwod: adminA1!, que cuenta con rol de ADMIN.
+
+### 🖥️ Frontend
+- React 18 + Vite
+- Axios
+- React Router
 
 ---
 
@@ -21,8 +28,28 @@ BACKEND_URL=http://localhost:8081
 
 ---
 
-## 📊 Diagrama Base de Datos
-https://drive.google.com/file/d/1m9_G7IaYHtwnMjaqAQNYkz02r3E3SE9C/view?usp=drive_link
+## 🚀 Instalación local
+
+### 🧩 Requisitos previos
+- Node.js 18+
+- Java 17+
+- MySQL
+
+---
+
+### 📦 Cloná el repositorio
+```bash
+git clone https://github.com/Beltravictor/-Desafio-profesional--Professional-Developer.git
+cd aplicacion
+```
+
+---
+
+## 🗂️ Diagrama de Entidades (ER)
+
+![ER](./docs/entities.png)
+
+> Creado con [https://dbdiagram.io](https://dbdiagram.io)
 
 ---
 
@@ -37,3 +64,22 @@ https://www.postman.com/beltravictor/proyecto-final-professional-developer/colle
 ![](https://img.shields.io/badge/%2303588C-03588C)
 ![](https://img.shields.io/badge/%23609BBF-609BBF)
 ![](https://img.shields.io/badge/%23D8EBF2-D8EBF2)
+
+---
+
+## 👤 Autores
+
+- [@beltravictor](https://github.com/beltravictor)
+
+---
+
+## 📄 Licencia
+MIT
+---
+
+## 📞 Soporte
+¿Encontraste un bug o tienes una sugerencia?
+
+- 🐛 Reportar bug
+- 💡 Solicitar feature
+- 📧 Email: vbeltramino01@gmail.com
